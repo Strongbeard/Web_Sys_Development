@@ -1,3 +1,7 @@
+/*CREATE USER IF NOT EXISTS 'TA_Hunter'@'localhost' IDENTIFIED BY 'web_sys_dev_user';
+GRANT ALL ON TA_Hunter.* TO 'TA_Hunters'@'localhost';*/
+GRANT ALL ON TA_Hunter.* TO 'TA_Hunter'@'localhost' IDENTIFIED BY 'web_sys_dev_user';
+
 DROP DATABASE IF EXISTS TA_Hunter;
 CREATE DATABASE TA_Hunter;
 USE TA_Hunter;
@@ -6,6 +10,7 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE users(
 	userId INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	rin INT UNSIGNED,
+	username VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	isAdmin BOOL,
 	isTA BOOL,
@@ -13,6 +18,7 @@ CREATE TABLE users(
 	isStudent BOOL,
 	PRIMARY KEY(userId),
 	UNIQUE(rin),
+	UNIQUE(username),
 	UNIQUE(email)
 );
 
