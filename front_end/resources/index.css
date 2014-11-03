@@ -1,0 +1,51 @@
+a {
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
+body {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+h1 {
+	text-align: center;
+	font-size: 40px;
+}
+
+h2 {
+	text-align: center;
+	font-size: 28px;
+}
+
+html {
+	background-image: url("BG.jpg");
+	font-family: sans-serif;
+}
+
+li {
+	display: inline;
+}
+
+.logoutLink {
+	text-align: center;
+}
+
+nav {
+	border: 1px solid #ccc;
+	border-width: 2px 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+
+}
+
+.navItem {
+	display: inline-block;
+	padding: 1px 30px;
+	font-weight: bold;
+}
