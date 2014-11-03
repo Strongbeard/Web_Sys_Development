@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Forgot Username Page</title>
+		<script type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="login.css">
+	</head>
+
+	<body>
+		<div id="centre">
+			<h1><img src="./images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
+			<section id="formBox">
+				<h2>Forgot Username?</h2>
+
+
+				<form class="loginForm">
+					<label>
+						<p>Please enter the email address used to create your TA Scheduler account below. We'll send your username to you right away.</p>
+						<input type="text" name="username" id="url" value="E-mail Address" onclick="this.value = ''"/>
+						<img id="url_user" src="./images/mailicon.png" alt="">
+					</label>
+
+					<!--just to have two options for the login button-->
+					<!--<a href="#" id="loginBtn">Login</a> -->
+					
+					<!--this needs help with the link whenever I change the type to image it will not let me reference
+					to another page but if I change the type to link, it will let me reference to another page-->
+					<!--<a href="http://www.google.com"><input type="image" src="./images/submit_hover.png" ></a>-->
+
+					<div id="submit">
+						<form>
+							<input type="image" src="./images/forgot.png" id="forgot" value="Sign In">
+						</form>
+					</div>
+					<a href="login.html" id="back_to_sign"> back to Sign in Page</a>
+					
+
+
+				</form>
+			</section>
+		</div>
+	</body>
+</html>
