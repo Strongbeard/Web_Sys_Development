@@ -37,7 +37,7 @@ section#formBox {
 	margin: 40px auto;
 	padding: 24px;
 	width: 300px;
-	height: 300px;
+	height: 335px;
 }
 section#formBox_password {
 	background-color: #eee;
@@ -115,7 +115,7 @@ form.loginForm textarea {
 	color:#bdbdbd;
 	font-family:helvetica, sans-serif;
 	font-size:17px;
-	padding-left:25px;
+	padding-left:30px !important;
 }
 
 #url_user {
@@ -215,4 +215,15 @@ form.loginForm textarea {
 	-webkit-transition: color 1s linear;
 	-o-transition: color 1s linear;
 
+}
+
+.error {
+	border: 2px solid red;
+	
+}
+
+#login_error {
+	color: red;
+	padding: 0;
+	height: 10px;
 }
