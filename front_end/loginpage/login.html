@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sign In Page</title>
+		<link rel="stylesheet" type="text/css" href="login.css">
+	</head>
+
+	<body>
+		<div id="centre">
+			<h1><img src="./images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
+			<section id="formBox">
+				<h2>Sign In</h2>
+
+
+				<form class="loginForm">
+					<label>
+						<p>Email: <a href="forgot_username.html" id="forgotUser"></a><p>
+						<input type="text" name="username" class="url" id="user" value="E-mail Address" onclick="this.value = ''"/>
+						<img id="url_user" src="./images/mailicon.png" alt="">
+					</label>
+					<label>
+						Password: <a href="forgot_password.html" id="forgotPassword">Forgot Password?</a>
+						<input type="password" name="password" class="url" id="pass" value="Password" onclick="this.value = ''">
+						<img id="url_password" src="./images/passicon.png" alt="">
+
+					</label>
+					<!--just to have two options for the login button-->
+					<!--<a href="#" id="loginBtn">Login</a> -->
+					
+					<!--this needs help with the link whenever I change the type to image it will not let me reference
+					to another page but if I change the type to link, it will let me reference to another page-->
+					<!--<a href="http://www.google.com"><input type="image" src="./images/submit_hover.png" ></a>-->
+
+					<div id="submit">
+						<input type="image" src="./images/submit_hover.png" id="submit1" value="Sign In">
+						<input type="image" src="./images/submit.png" id="submit2" value="Sign In">
+					</div>
+					
+					<div id="links_right"><a href="register.html">Not a Member Yet?</a></div>
+
+
+				</form>
+			</section>
+			
+		</div>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			//move to seperate js later
+			$('.loginForm').submit(function (event) {
+				event.preventDefault();
+				console.log("logging in ....");
+				var user = $('#user').val();
+				var pass = $('#pass').val();
+
+				if (!user || !pass) {
+					//highlight fields that aren't completed
+					console.log("error");
+				}
+				else {
+
+					$.ajax({
+		                url: "validate_login.php",
+		                data: { 'user': user, 'pass': pass },
+		                method: 'POST',
+		                success: function (data) {
+		                    data = $.trim(data);
+
+		                    console.log(data);
+
+		                    /*
+		                      data is codes sent by validate_login.php
+		                      1 is success
+		                      2 is login error
+		                    */
+		                    if (data === "1") { 
+		                    	console.log("login successful")
+		                        document.location.href = '../index.html';
+		                    }
+		                    if (data === "2") {
+		                    	console.log("can't log in");
+		                        // $('#user').addClass('error');
+		                        // $('#password').addClass('error');
+		                        // $('#login_error').html("<p>user name or password invalid</p>");
+		                    }
+
+		                },
+		                error: function () {
+		                    console.log("error");
+		                }
+		            });
+
+				}
+			});
+		</script>
+	</body>
+</html>
