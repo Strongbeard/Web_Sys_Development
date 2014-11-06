@@ -1,9 +1,14 @@
 <?php
 class DB {
+	// --- VARIABLES ---
+	
 	private $dbname = 'TA_Hunter';
 	private $username = 'TA_Hunter';
 	private $password = 'web_sys_dev_user';
 	private $conn;
+	
+	
+	// --- CONSTRUCTORS ---
 	
 	public function __construct(){
 		$this->dbname = 'TA_Hunter';
@@ -22,44 +27,34 @@ class DB {
 		return $instance;
 	}
 	
-	// Returns the connection to the database.
-/*	public function connection() {
-		return $this->conn;
-	}*/
 	
-	public function query( $query_string ) {
-		if( !is_string($query_string) ) {
-			throw new Exception('DB::query() - Invalid Query Format');
-		}
-		return $this->conn->query( $query_string );
-	}
+	// --- FUNCTIONS ---
 	
-	public function prep_bind_execute( $query_string, $var_array = array() ) {
-//		try {
-			if( !is_string($query_string) ) {
-				throw new Exception('DB::query() - Invalid Query Format');
-			}
+	public function prep_execute( $query_string, $var_array = array() ) {
+		// Begin Transaction
+		$this->conn->beginTransaction();
+		
+		// Try to complete statement. If an error occurs, rollback and throw
+		// the same PDOException caught
+		try {
 			$pstmt = $this->conn->prepare( $query_string );
-
-			print_r($var_array);
-			echo "<br />";
-			print_r($pstmt);
-			echo "<br />";
-
 			$pstmt->execute( $var_array );
-			return $pstmt->fetch(PDO::FETCH_ASSOC);
-/*		}
-		catch( PDOException $Exception ) {
-			echo $Exception->getMessage();
-			return false;
-		}*/
-	}
-	
-	public function exec( $query_string ) {
-		if( !is_string($query_string) ) {
-			throw new Exception('DB::exec() - Invalid Query Format');
+			$this->conn->commit();
 		}
-		return $this->conn->exec( $query_string );
+		catch( PDOException $Exception ) {
+			$this->conn->rollBack();
+			throw $Exception;
+		}
+
+		// Return either all rows from a SELECT statement or the # of rows
+		// affected by the statement. Try-Catch block because no way to check
+		// that rows have been returned by the execution.
+		try {
+			$rows = $pstmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		catch( PDOException $Exception ) {
+			$rows = $pstmt->rowCount();
+		}
+		return $rows;
 	}
 }
-?>
