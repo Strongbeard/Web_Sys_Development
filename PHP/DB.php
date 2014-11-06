@@ -10,6 +10,7 @@ class DB {
 		$this->username = 'TA_Hunter';
 		$this->password = 'web_sys_dev_user';
 		$this->conn = new PDO( 'mysql:host=localhost;dbname=' . $this->dbname, $this->username, $this->password );
+		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 	
 	// Returns Database Connection Singleton
@@ -33,12 +34,25 @@ class DB {
 		return $this->conn->query( $query_string );
 	}
 	
-	public function prep_query( $query_string, $var_array ) {
-		if( !is_string($query_string) ) {
-			throw new Exception('DB::query() - Invalid Query Format');
-		}
-		$this->conn->prepare( $query_string );
-		return $this->conn->execute( $var_array );
+	public function prep_bind_execute( $query_string, $var_array = array() ) {
+//		try {
+			if( !is_string($query_string) ) {
+				throw new Exception('DB::query() - Invalid Query Format');
+			}
+			$pstmt = $this->conn->prepare( $query_string );
+
+			print_r($var_array);
+			echo "<br />";
+			print_r($pstmt);
+			echo "<br />";
+
+			$pstmt->execute( $var_array );
+			return $pstmt->fetch(PDO::FETCH_ASSOC);
+/*		}
+		catch( PDOException $Exception ) {
+			echo $Exception->getMessage();
+			return false;
+		}*/
 	}
 	
 	public function exec( $query_string ) {

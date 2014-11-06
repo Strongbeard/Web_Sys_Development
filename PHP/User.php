@@ -1,8 +1,6 @@
 <?php
 require_once('./DB.php');
 
-$db = DB::getInstance();
-
 class User {
 	protected $uid = null;
 	protected $username = '';
@@ -44,7 +42,24 @@ class User {
 	
 	public static function withValues( $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
 		$instance = new self( $username, $password, $email, $isStudent, $isTA, $isTutor, $isAdmin );
-		
+		$db = DB::getInstance();
+		$already_exists = $db->prep_bind_execute("SELECT * FROM users WHERE username = :username AND email = :email;",array(
+			':username' => $instance->username,
+			':email' => $instance->email
+		));
+		print_r($already_exists);
+		if( empty($already_exists) ) {
+			$return = $db->prep_bind_execute('INSERT INTO users (username, email, isStudent, isTA, isTutor, isAdmin) VALUES (:username, :email, :isStudent, :isTA, :isTutor, :isAdmin);',array(
+				':username' => $instance->username,
+				':email' => $instance->email,
+				':isStudent' => $instance->isStudent,
+				':isTA' => $instance->isTA,
+				':isTutor' => $instance->isTutor,
+				':isAdmin' => $instance->isAdmin
+			));
+			print_r($return);
+		}
+		//print_r($db);
 		
 		
 		return $instance;
@@ -58,5 +73,5 @@ class User {
 
 
 <?php
-	print_r(User::withValues('username','password','email'));
+	User::withValues('username2','password','email2');
 ?>
