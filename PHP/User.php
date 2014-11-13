@@ -16,20 +16,12 @@ class User {
 	
 	// --- CONSTRUCTORS ---
 	
+	// Private constructor helper function. Called by fromDatabase and
+	// withValues
 	private function __construct( $uid, $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
-		/*if( empty($username) ) {
-			throw new Exception('Empty username');
-		}
-		if( empty($password) ) {
-			throw new Exception('Empty password');
-		}
-		if( empty($email) ) {
-			throw new Exception('Empty email');
-		}*/
-		
 		$this->uid = $uid;
-		$this->password = password_hash( $password, PASSWORD_DEFAULT );
 		if( !($this->setUsername($username) &&
+		$this->setPassword($password) &&
 		$this->setEmail($email) &&
 		$this->setIsAdmin($isAdmin) &&
 		$this->setIsTA($isTA) &&
@@ -39,6 +31,7 @@ class User {
 		}
 	}
 	
+	// Constructor loads user data from the database using a unique key
 	public static function fromDatabase( $unique_column, $value ) {
 		// Check that input is valid
 		$unique_column = strtolower( $unique_column );
@@ -65,6 +58,7 @@ class User {
 		return $instance;
 	}
 	
+	// Constructor builds a new user from parameters
 	public static function withValues( $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
 		$instance = new self(null, $username, $password, $email, $isStudent, $isTA, $isTutor, $isAdmin );
 		return $instance;
@@ -76,6 +70,22 @@ class User {
 	// Returns whether the password matches the password hash when hashed.
 	public function verify_password( $password ) {
 		return password_verify( $password, $this->password );
+	}
+	
+	// Creates a user session after verifying their password. User class is stored
+	// in $_SESSION['user']. Returns true on successful login, otherwise false.
+	public function login( $password ) {
+		if( $this->verify_password( $password ) ) {
+			session_start();
+			$_SESSION['user'] = $this;
+			return true;
+		}
+		return false;
+	}
+	
+	// Destroys the current user session
+	public function logout() {
+		session_destroy();
 	}
 	
 	// Inserts or updates the user in the database
@@ -202,6 +212,14 @@ class User {
 		return false;
 	}
 	
+	public function setPassword( $password ) {
+		if( $this->uid !== null && strlen($password) > 8 ) {
+			$this->password = password_hash( $password, PASSWORD_DEFAULT );
+			return true;
+		}
+		return false;
+	}
+	
 /*	public static function withValues( $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
 		$instance = new self( $username, $password, $email, $isStudent, $isTA, $isTutor, $isAdmin );
 		$db = DB::getInstance();
@@ -237,16 +255,6 @@ class User {
 
 
 <?php
-	//User::withValues('username5','password','email5');
-/*	echo password_hash('password',PASSWORD_DEFAULT);
-	echo '<br />';
-	$user = User::fromDatabase('userid',12);
-	echo $user->setIsStudent(false);
-	echo '<br />';
-	echo $user->getIsStudent();
-	echo 'setUsername return: ' . $user->setUsername('bla');
-	print_r( $user2 = user::withValues('uname','pass','email@gmail.com') );*/
-	//$user2 = user::withValues('mahonk3','passs','mahonk3@rpi.edu');
 	$user2 = user::fromDatabase('userid',12);
 	$user2->setIsAdmin(false);
 	$user2->store();
