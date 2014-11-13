@@ -75,7 +75,7 @@ class User {
 	// Creates a user session after verifying their password. User class is stored
 	// in $_SESSION['user']. Returns true on successful login, otherwise false.
 	public function login( $password ) {
-		if( $this->verify_password( $password ) ) {
+		if( $this->uid !== null && $this->verify_password( $password ) ) {
 			session_start();
 			$_SESSION['user'] = $this;
 			return true;
@@ -213,49 +213,11 @@ class User {
 	}
 	
 	public function setPassword( $password ) {
-		if( $this->uid !== null && strlen($password) > 8 ) {
+		if( strlen($password) > 8 ) {
 			$this->password = password_hash( $password, PASSWORD_DEFAULT );
 			return true;
 		}
 		return false;
 	}
-	
-/*	public static function withValues( $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
-		$instance = new self( $username, $password, $email, $isStudent, $isTA, $isTutor, $isAdmin );
-		$db = DB::getInstance();
-		$already_exists = $db->prep_execute("SELECT * FROM users WHERE username = :username AND email = :email;",array(
-			':username' => $instance->username,
-			':email' => $instance->email
-		));
-
-
-		if( empty($already_exists) ) {
-			$db->prep_execute('INSERT INTO users (username, email, isStudent, isTA, isTutor, isAdmin) VALUES (:username, :email, :isStudent, :isTA, :isTutor, :isAdmin);',array(
-				':username' => $instance->username,
-				':email' => $instance->email,
-				':isStudent' => $instance->isStudent,
-				':isTA' => $instance->isTA,
-				':isTutor' => $instance->isTutor,
-				':isAdmin' => $instance->isAdmin
-			));
-		}
-		else {
-			throw new Exception('USER ALREADY EXISTS IN DATABASE');
-		}
-		
-		
-		return $instance;
-	}
-	
-	private function isSecure() {
-		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
-	}*/
 }
-?>
-
-
-<?php
-	$user2 = user::fromDatabase('userid',12);
-	$user2->setIsAdmin(false);
-	$user2->store();
 ?>
