@@ -77,7 +77,7 @@
 		                success: function (data) {
 		                    data = $.trim(data);
 
-		                    console.log(data);
+		                    console.log("data: " + data);
 
 		                    /*
 		                      data is codes sent by validate_login.php
@@ -88,7 +88,7 @@
 		                    	console.log("login successful")
 		                        document.location.href = '../index.html';
 		                    }
-		                    if (data === "2") {
+		                    if (data === "0") {
 		                    	console.log("can't log in");
 		                        $('#login_error').html("User name and/or password invalid");
 		                    }
