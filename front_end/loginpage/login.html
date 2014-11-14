@@ -77,12 +77,12 @@
 		                success: function (data) {
 		                    data = $.trim(data);
 
-		                    console.log("data: " + data);
+		                    //console.log("data: " + data);
 
 		                    /*
 		                      data is codes sent by validate_login.php
 		                      1 is success
-		                      2 is login error
+		                      0 is login error
 		                    */
 		                    if (data === "1") { 
 		                    	console.log("login successful")
