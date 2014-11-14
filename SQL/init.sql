@@ -1,11 +1,12 @@
-/*CREATE USER IF NOT EXISTS 'TA_Hunter'@'localhost' IDENTIFIED BY 'web_sys_dev_user';
-GRANT ALL ON TA_Hunter.* TO 'TA_Hunters'@'localhost';*/
+/* DATABASE USER ACCESS */
 GRANT ALL ON TA_Hunter.* TO 'TA_Hunter'@'localhost' IDENTIFIED BY 'web_sys_dev_user';
 
+/* DATABASE CREATION */
 DROP DATABASE IF EXISTS TA_Hunter;
 CREATE DATABASE TA_Hunter;
 USE TA_Hunter;
 
+/* TABLE CREATION */
 DROP TABLE IF EXISTS Users;
 CREATE TABLE users(
 	userId INT UNSIGNED NOT NULL AUTO_INCREMENT,
