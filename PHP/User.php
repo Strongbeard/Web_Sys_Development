@@ -1,5 +1,6 @@
 <?php
-require_once('./DB.php');
+require_once(dirname(dirname(__FILE__)) . '/config.php');
+require_once(SITE_ROOT . '\PHP\DB.php');
 
 class User {
 	// --- VARIABLES ---
