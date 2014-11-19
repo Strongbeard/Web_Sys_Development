@@ -20,10 +20,9 @@ class User {
 	
 	// Private constructor helper function. Called by fromDatabase and
 	// withValues
-	private function __construct( $uid, $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
+	private function __construct( $uid, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
 		$this->uid = $uid;
-		if( !($this->setPassword($password) &&
-		$this->setEmail($email) &&
+		if( !($this->setEmail($email) &&
 		$this->setIsAdmin($isAdmin) &&
 		$this->setIsTA($isTA) &&
 		$this->setIsTutor($isTutor) &&
@@ -58,12 +57,21 @@ class User {
 		}
 		
 		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['email'], $passwordRows[0]['password'], $usersRows[0]['isStudent'], $usersRows[0]['isTA'], $usersRows[0]['isTutor'], $usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'] );
+		if( empty($passwordRows[0]['password']) ) {
+			return null;
+		}
+		else {
+			$instance->password = $passwordRows[0]['password'];
+		}
 		return $instance;
 	}
 	
 	// Constructor builds a new user from parameters
 	public static function withValues( $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
 		$instance = new self(null, $email, $password, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
+		if( !$instance->setPassword($password) ) {
+			return null;
+		}
 		return $instance;
 	}
 	
@@ -105,7 +113,11 @@ class User {
 	
 	// Destroys the current user session
 	public function logout() {
-		session_destroy();
+		if( isset($_SESSION) && isset($_SESSION['user']) ) {
+			session_destroy();
+			return true;
+		}
+		return false;
 	}
 	
 	// Inserts the user in the database. If the user exists and the update flag
