@@ -19,7 +19,6 @@
 			$user = User::fromDatabase('email', $username);
 			if ($user) {
 				if ($user->login($password)) {
-					session_start();
 					echo 1;
 				}
 				else {
