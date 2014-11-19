@@ -14,8 +14,8 @@ class DB {
 	
 	public function __construct(){
 		$this->dbname = 'TA_Hunter';
-		$this->username = 'root';
-		$this->password = 'bc11375';
+		$this->username = 'TA_Hunter';
+		$this->password = 'web_sys_dev_user';
 		$this->conn = new PDO( 'mysql:host=localhost;dbname=' . $this->dbname, $this->username, $this->password );
 		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
