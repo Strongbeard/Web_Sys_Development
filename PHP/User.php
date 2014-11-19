@@ -113,7 +113,21 @@ class User {
 	
 	// Destroys the current user session
 	public function logout() {
+		// Check if session exists before destroying it
 		if( isset($_SESSION) && isset($_SESSION['user']) ) {
+			// Erase local session data
+			$_SESSION = array();
+			
+			// Remove client's cookie
+			if (ini_get("session.use_cookies")) {
+				$params = session_get_cookie_params();
+				setcookie(session_name(), '', time() - 42000,
+					$params["path"], $params["domain"],
+					$params["secure"], $params["httponly"]
+				);
+			}
+
+			// Destroy the session
 			session_destroy();
 			return true;
 		}
