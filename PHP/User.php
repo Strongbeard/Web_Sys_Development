@@ -28,11 +28,12 @@ class User {
 		$this->setIsTA($isTA) &&
 		$this->setIsTutor($isTutor) &&
 		$this->setIsStudent($isStudent)) ) {
-			throw new Exception('User: bad input');
+			return null;
 		}
 	}
 	
 	// Constructor loads user data from the database using a unique key
+	// Returns null if user not found.
 	public static function fromDatabase( $unique_column, $value ) {
 		// Check that input is valid
 		if( !USER::validUniqueColumn($unique_column) ) {
@@ -45,13 +46,13 @@ class User {
 			':value' => $value
 		));
 		if( empty($usersRows) ) {
-			throw new Exception('User: User does not exist in database.');
+			return null;
 		}
 		$passwordRows = $db->prep_execute('SELECT * FROM passwords WHERE userid = :userid;', array(
 			':userid' => $usersRows[0]['userId']
 		));
 		if( empty($passwordRows) ) {
-			throw new Exception('User: userId not found in password database.');
+			return null;
 		}
 		
 		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['username'], $passwordRows[0]['password'] , $usersRows[0]['email'], $usersRows[0]['isStudent'], $usersRows[0]['isTA'], $usersRows[0]['isTutor'], $usersRows[0]['isAdmin'] );
