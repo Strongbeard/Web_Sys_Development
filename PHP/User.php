@@ -6,28 +6,30 @@ class User {
 	// --- VARIABLES ---
 	
 	protected $uid = null;
-	protected $username = '';
 	protected $password = '';
 	protected $email = '';
 	protected $isAdmin = false;
 	protected $isTA = false;
 	protected $isTutor = false;
 	protected $isStudent = false;
+	protected $firstName = null;
+	protected $lastName = null;
 	
 	
 	// --- CONSTRUCTORS ---
 	
 	// Private constructor helper function. Called by fromDatabase and
 	// withValues
-	private function __construct( $uid, $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
+	private function __construct( $uid, $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
 		$this->uid = $uid;
-		if( !($this->setUsername($username) &&
-		$this->setPassword($password) &&
+		if( !($this->setPassword($password) &&
 		$this->setEmail($email) &&
 		$this->setIsAdmin($isAdmin) &&
 		$this->setIsTA($isTA) &&
 		$this->setIsTutor($isTutor) &&
-		$this->setIsStudent($isStudent)) ) {
+		$this->setIsStudent($isStudent) &&
+		$this->setFirstName($firstName) &&
+		$this->setLastName($lastName)) ) {
 			return null;
 		}
 	}
@@ -37,7 +39,7 @@ class User {
 	public static function fromDatabase( $unique_column, $value ) {
 		// Check that input is valid
 		if( !USER::validUniqueColumn($unique_column) ) {
-			throw new Exception('Column to select user from does not exist.');
+			return null;
 		}
 		
 		// Extract user information from database
@@ -55,13 +57,13 @@ class User {
 			return null;
 		}
 		
-		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['username'], $passwordRows[0]['password'] , $usersRows[0]['email'], $usersRows[0]['isStudent'], $usersRows[0]['isTA'], $usersRows[0]['isTutor'], $usersRows[0]['isAdmin'] );
+		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['email'], $passwordRows[0]['password'], $usersRows[0]['isStudent'], $usersRows[0]['isTA'], $usersRows[0]['isTutor'], $usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'] );
 		return $instance;
 	}
 	
 	// Constructor builds a new user from parameters
-	public static function withValues( $username, $password, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false ) {
-		$instance = new self(null, $username, $password, $email, $isStudent, $isTA, $isTutor, $isAdmin );
+	public static function withValues( $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
+		$instance = new self(null, $email, $password, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
 		return $instance;
 	}
 	
@@ -116,21 +118,22 @@ class User {
 		$user_string = '';
 		$password_string = '';
 		if( !$update ) {
-			$user_string = 'INSERT IGNORE INTO users (username, email, isStudent, isTA, isTutor, isAdmin) VALUES (:username, :email, :isStudent, :isTA, :isTutor, :isAdmin);';
+			$user_string = 'INSERT IGNORE INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName);';
 			$password_string = 'INSERT IGNORE INTO passwords (userid,password) VALUES (:userid,:password);';
 		}
 		else{
-			$user_string .= 'INSERT INTO users (username, email, isStudent, isTA, isTutor, isAdmin) VALUES (:username, :email, :isStudent, :isTA, :isTutor, :isAdmin) ON DUPLICATE KEY UPDATE username = VALUES(username), email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin)';
+			$user_string .= 'INSERT INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName) ON DUPLICATE KEY UPDATE email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName)';
 			$password_string .= 'INSERT INTO passwords (userid,password) VALUES (:userid,:password) ON DUPLICATE KEY UPDATE password = VALUES(password)';
 		}
 		
 		$user_result = $db->prep_execute( $user_string . ';', array(
-			':username' => $this->username,
 			':email' => $this->email,
 			':isStudent' => ($this->isStudent) ? 1 : 0,
 			':isTA' => ($this->isTA) ? 1 : 0,
 			':isTutor' => ($this->isTutor) ? 1 : 0,
-			':isAdmin' => ($this->isAdmin) ? 1 : 0
+			':isAdmin' => ($this->isAdmin) ? 1 : 0,
+			':firstName' => $this->firstName,
+			':lastName' => $this->lastName
 		));
 		
 		if( !$user_result ) {
@@ -176,8 +179,12 @@ class User {
 		return $this->uid;
 	}
 	
-	public function getUsername() {
-		return $this->username;
+	public function getFirstName() {
+		return $this->firstName;
+	}
+	
+	public function getLastName() {
+		return $this->lastName;
 	}
 	
 	
@@ -223,22 +230,25 @@ class User {
 		return false;
 	}
 	
-	public function setUsername( $username ) {
-		$username = filter_var($username, FILTER_VALIDATE_REGEXP, array(
-			'options'=>array(
-				'regexp' => '/^[A-Za-z0-9_]+$/'
-			)
-		));
-		if( is_string($username) && !empty($username) ) {
-			$this->username = $username;
+	public function setPassword( $password ) {
+		if( strlen($password) > 8 ) {
+			$this->password = password_hash( $password, PASSWORD_DEFAULT );
 			return true;
 		}
 		return false;
 	}
 	
-	public function setPassword( $password ) {
-		if( strlen($password) > 8 ) {
-			$this->password = password_hash( $password, PASSWORD_DEFAULT );
+	public function setFirstName( $firstname ) {
+		if( is_string($firstname) && !empty($firstname) ) {
+			$this->firstName = $firstname;
+			return true;
+		}
+		return false;
+	}
+	
+	public function setLastName( $lastname ) {
+		if( is_string($lastname) && !empty($lastname) ) {
+			$this->lastName = $lastname;
 			return true;
 		}
 		return false;
@@ -249,7 +259,7 @@ class User {
 	// Checks if unique column is a valid value
 	private static function validUniqueColumn( $unique_column ) {
 		$unique_column = strtolower( $unique_column );
-		if( $unique_column != 'userid' && $unique_column != 'username' && $unique_column != 'email' && $unique_column != 'rin' ) {
+		if( $unique_column != 'userid' && $unique_column != 'email' ) {
 			return false;
 		}
 		return true;
@@ -258,8 +268,8 @@ class User {
 	// Fetched the userID from the database & updates the class
 	private function updateUID() {
 		$db = DB::getInstance();
-		$result = $db->prep_execute( 'SELECT userid FROM users WHERE username = :username;', array(
-			':username' => $this->username
+		$result = $db->prep_execute( 'SELECT userid FROM users WHERE email = :email;', array(
+			':email' => $this->email
 		));
 		$this->uid = $result[0]['userid'];
 	}

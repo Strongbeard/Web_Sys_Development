@@ -10,16 +10,14 @@ USE TA_Hunter;
 DROP TABLE IF EXISTS Users;
 CREATE TABLE users(
 	userId INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	rin INT UNSIGNED,
-	username VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
+	firstName VARCHAR(255),
+	lastName VARCHAR(255),
 	isAdmin BOOL NOT NULL,
 	isTA BOOL NOT NULL,
 	isTutor BOOL NOT NULL,
 	isStudent BOOL NOT NULL,
 	PRIMARY KEY(userId),
-	UNIQUE(rin),
-	UNIQUE(username),
 	UNIQUE(email)
 );
 
