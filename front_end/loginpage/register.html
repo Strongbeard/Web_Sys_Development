@@ -2,8 +2,13 @@
 <html>
 	<head>
 		<title>Registration Page</title>
-		<script type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="login.css">
+		<style>
+			.url {
+				width: 290px !important;
+			}
+
+		</style>
 	</head>
 
 	<body>
@@ -11,43 +16,151 @@
 			<h1><img src="./images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
 			<section id="formBox_password">
 				<h2>Registration</h2>
-				
-				<form class="loginForm">
-						<p>Registration is easy! Just enter your email address and password in order to create a TA Scheduler account. Then select submit.</p>
+				<p>Registration is easy! Enter your information to create a TA Scheduler account. Then select submit.</p>
+				<section id="login_error"></section>
 
+				<form class="loginForm" > 
 					<label>
-						<p>Name: </p>
-						<input type="text" name="name" id="url" value="Enter Your Name" onclick="this.value = ''"/>
+						<p style="padding-top: 26px;">Name:<p>
+						<input type="text" name="name" class="url" id="name" placeholder="Enter first name and last name"/>
 					</label>
 					<label>
-						<p>Email: </p>
-						<input type="text" name="username" id="url" value="Enter Your RPI E-mail Address" onclick="this.value = ''"/>
+						<p>Email: <p>
+						<input type="text" name="email" class="url" id="email" placeholder="E-mail Address"/>
 						<img id="url_user" src="./images/mailicon.png" alt="">
 					</label>
 					<label>
-						<p>Password: <p>
-						<input type="password" name="username" id="url" value="Enter a Password" onclick="this.value = ''"/>
+						Password:
+						<input type="password" name="password" class="url" id="password" placeholder="Password">
 						<img id="url_password" src="./images/passicon.png" alt="">
 
 					</label>
-					<!--just to have two options for the login button-->
-					<!--<a href="#" id="loginBtn">Login</a> -->
-					
-					<!--this needs help with the link whenever I change the type to image it will not let me reference
-					to another page but if I change the type to link, it will let me reference to another page-->
-					<!--<a href="http://www.google.com"><input type="image" src="./images/submit_hover.png" ></a>-->
+					<label>
+						Confirm Password:
+						<input type="password" name="confirm_password" class="url" id="confirm_password" placeholder="Confirm password">
+						<img id="url_password" src="./images/passicon.png" alt="">
 
-					<div id="submit_password">
-						<form>
-							<input type="image" src="./images/forgot.png" id="forgot" value="Sign In">
-						</form>
+					</label>
+				
+
+					<div id="submit">
+						<input type="image" src="./images/forgot.png" id="forgot" value="Sign In">
 					</div>
 					
-					<a href="login.html" id="back_to_sign"> back to Sign in Page</a>
+					<div id="links_right"><a href="login.html" id="back_to_sign"> back to Sign in Page</a></div>
 
 
 				</form>
 			</section>
+
+
+			
+			
 		</div>
+
+		<script src="../resources/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript">
+			//move to seperate js later
+			$('.loginForm').submit(function (event) {
+				event.preventDefault();
+				console.log("logging in ....");
+
+				var error = false;
+				var name = $('#name').val();
+				var first_name;
+				var last_name;
+				var email = $('#email').val();
+				var password = $('#password').val();
+				var confirm_password = $('#confirm_password').val();
+
+
+				$('input').removeClass('error');
+				$('#login_error').empty();
+
+				if (!name || !email || !password) {
+					//highlight fields that aren't completed
+					if (!name) {
+						$('#name').addClass('error');
+					}
+					if (!email) {
+						$('#email').addClass('error');
+					}
+					if (!password) {
+						$('#password').addClass('error');
+					}
+					if (!confirm_password) {
+						$('#confirm_password').addClass('error');
+					}
+					$('#login_error').html("Field(s) blank");
+					console.log("error");
+					error = true;
+				}
+
+				//check if first and last name are entered. Takes precedence over unmatching passwords.
+				var names_ = name.split(" ");
+				if (names_.length == 2 && error == false && names_[1] === "") { //checks for string followed by space
+					$('#login_error').html("Please enter first name and last name only, seperated by a space");
+					$('#name').addClass('error');
+					error = true;
+				}
+				else if (names_.length !== 2 && error == false) { //checks if length is 2
+					$('#login_error').html("Please enter first name and last name only, seperated by a space");
+					$('#name').addClass('error');
+					error = true;
+				}
+				else {
+					first_name = names_[0];
+					last_name = names_[1];
+				}
+				//console.log(names_.length + "-" + names_[0] + "-" + names_[1] + "-"); //debugging
+
+
+				//check for matching passwords. If there are empty fields, empty fields error takes precedence
+				if (password !== confirm_password && error == false) {
+					$('#login_error').html("Passwords do not match!");
+					$('#password').addClass('error');
+					$('#confirm_password').addClass('error');
+					error = true;
+				}
+
+
+				if (error === false) {
+
+					$.ajax({
+		                url: "validate_login.php",
+		                data: { 'register': '1', 'firstName': first_name, 'lastName': last_name, 'email': email, 'password': password },
+		                method: 'POST',
+		                success: function (data) {
+		                    data = $.trim(data);
+
+		                    console.log("data: " + data);
+
+		                    /*
+		                      data is codes sent by validate_login.php
+		                      2 is success
+		                      1 is login error - email already exists
+		                      0 is login error - password too short
+
+		                    */
+							if (data === "2") { 
+		                    	console.log("login successful")
+		                        document.location.href = '../index.html';
+		                    }
+		                    if (data === "1") { 
+		                         $('#login_error').html("email already exists in system");
+		                    }
+		                    if (data === "0") {
+		                    	$('#login_error').html("Password must be at least 9 characters");
+		                    }
+
+		                },
+		                error: function () {
+		                    console.log("error");
+		                }
+		            });
+
+				}
+			});
+		</script>
 	</body>
 </html>

@@ -9,31 +9,58 @@
 	try {
 		//$dbconn = new DB();
 		$dbconn = DB::getInstance();
-		$empty = empty($_POST['user']) || empty($_POST['pass']); 
-		if( isset($_POST['user'], $_POST['pass']) && $empty == false) {
 
-			$username = mysql_real_escape_string(stripslashes($_POST['user']));
-			$password = mysql_real_escape_string(stripslashes($_POST['pass']));
+		if (isset($_POST['login'])) {
+			$empty = empty($_POST['user']) || empty($_POST['pass']); 
+			if( isset($_POST['user'], $_POST['pass']) && $empty == false) {
 
-			
-			$user = User::fromDatabase('email', $username);
-			if ($user) {
-				if ($user->login($password)) {
-					echo 1;
+				$username = mysql_real_escape_string(stripslashes($_POST['user']));
+				$password = mysql_real_escape_string(stripslashes($_POST['pass']));
+
+				
+				$user = User::fromDatabase('email', $username);
+				if ($user) {
+					if ($user->login($password)) {
+						echo 1;
+					}
+					else {
+						echo 0;
+					}
 				}
 				else {
 					echo 0;
 				}
+				
+				exit();
+				
 			}
 			else {
-				echo 0;
+				echo "form not completed";
 			}
-			
-			exit();
-			
 		}
-		else {
-			echo "form not completed";
+
+		if (isset($_POST['register'])) {
+			$empty = empty($_POST['firstName']) || empty($_POST['lastName']) || empty($_POST['email']) || empty($_POST['password']); 
+			if( isset($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password']) && $empty == false) { 
+
+				$firstName = mysql_real_escape_string(stripslashes($_POST['firstName']));
+				$lastName = mysql_real_escape_string(stripslashes($_POST['lastName']));
+				$email = mysql_real_escape_string(stripslashes($_POST['email']));
+				$password = mysql_real_escape_string(stripslashes($_POST['password']));
+
+				$user = User::withValues($email, $password, true); //TO DO: currently leaves names fields blank, set to TA by default -- bug????
+				if ($user === null) { //check if error instantiating user (password too short)
+					echo 0;
+				}
+				else {
+					if ($user->store() === false) //check if user already exists in system
+						echo 1;
+					else {
+						echo 2;
+					}
+
+				}
+			}
 		}
 	}
 	catch (Exception $e) {

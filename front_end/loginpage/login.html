@@ -13,15 +13,15 @@
 
 				<section id="login_error"></section>
 
-				<form class="loginForm">
+				<form class="loginForm"> 
 					<label>
 						<p>Email: <a href="forgot_username.html" id="forgotUser"></a><p>
-						<input type="text" name="username" class="url" id="user" placeholder="E-mail Address" onclick="this.value = ''"/>
+						<input type="text" name="username" class="url" id="email" placeholder="E-mail Address"/>
 						<img id="url_user" src="./images/mailicon.png" alt="">
 					</label>
 					<label>
 						Password: <a href="forgot_password.html" id="forgotPassword">Forgot Password?</a>
-						<input type="password" name="password" class="url" id="pass" placeholder="Password" onclick="this.value = ''">
+						<input type="password" name="password" class="url" id="pass" placeholder="Password">
 						<img id="url_password" src="./images/passicon.png" alt="">
 
 					</label>
@@ -51,7 +51,7 @@
 			$('.loginForm').submit(function (event) {
 				event.preventDefault();
 				console.log("logging in ....");
-				var user = $('#user').val();
+				var user = $('#email').val();
 				var pass = $('#pass').val();
 
 				$('input').removeClass('error');
@@ -60,7 +60,7 @@
 				if (!user || !pass) {
 					//highlight fields that aren't completed
 					if (!user) {
-						$('#user').addClass('error');
+						$('#email').addClass('error');
 					}
 					if (!pass) {
 						$('#pass').addClass('error');
@@ -72,7 +72,7 @@
 
 					$.ajax({
 		                url: "validate_login.php",
-		                data: { 'user': user, 'pass': pass },
+		                data: { 'login': '1', 'user': user, 'pass': pass },
 		                method: 'POST',
 		                success: function (data) {
 		                    data = $.trim(data);
