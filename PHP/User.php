@@ -216,6 +216,18 @@ class User {
 		return $this->lastName;
 	}
 	
+	public function getStudentCourses() {
+		if( $this->isStudent && $this->uid !== null) {
+			$db = DB::getInstance();
+			return $db->prep_execute('SELECT subj, crse FROM students_courses WHERE userid = :userid', array(
+				':userid' => $this->uid
+			));
+		}
+		else {
+			return false;
+		}
+	}
+	
 	
 	// SET FUNCTIONS
 	
