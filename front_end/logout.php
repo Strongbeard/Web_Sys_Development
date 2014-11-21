@@ -18,7 +18,7 @@
 	<body>
 		<h1>You have successfully logged out!</h1>
 	
-		<p class="logoutLink"><a href="<?php echo SITE_URL; ?>/front_end/loginpage/login.html">Return to login page</a></p>
+		<p class="logoutLink"><a href="<?php echo SITE_URL; ?>/front_end/loginpage/login.php">Return to login page</a></p>
 		<p class="logoutLink"><a href="JavaScript:window.close()">Close Window</a></p>
 	</body>
 </html>
