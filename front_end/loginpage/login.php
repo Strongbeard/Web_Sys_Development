@@ -1,3 +1,7 @@
+<?php
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -7,7 +11,7 @@
 
 	<body>
 		<div id="centre">
-			<h1><img src="./images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
+			<h1><img src="<?php echo SITE_URL; ?>/front_end/loginpage/images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
 			<section id="formBox">
 				<h2>Sign In</h2>
 
@@ -17,12 +21,12 @@
 					<label>
 						<p>Email: <a href="forgot_username.html" id="forgotUser"></a><p>
 						<input type="text" name="username" class="url" id="email" placeholder="E-mail Address"/>
-						<img id="url_user" src="./images/mailicon.png" alt="">
+						<img id="url_user" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/mailicon.png" alt="">
 					</label>
 					<label>
 						Password: <a href="forgot_password.html" id="forgotPassword">Forgot Password?</a>
 						<input type="password" name="password" class="url" id="pass" placeholder="Password">
-						<img id="url_password" src="./images/passicon.png" alt="">
+						<img id="url_password" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/passicon.png" alt="">
 
 					</label>
 					<!--just to have two options for the login button-->
@@ -33,8 +37,8 @@
 					<!--<a href="http://www.google.com"><input type="image" src="./images/submit_hover.png" ></a>-->
 
 					<div id="submit">
-						<input type="image" src="./images/submit_hover.png" id="submit1" value="Sign In">
-						<input type="image" src="./images/submit.png" id="submit2" value="Sign In">
+						<input type="image" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/submit_hover.png" id="submit1" value="Sign In">
+						<input type="image" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/submit.png" id="submit2" value="Sign In">
 					</div>
 					
 					<div id="links_right"><a href="register.html">Not a Member Yet?</a></div>
@@ -71,7 +75,7 @@
 				else {
 
 					$.ajax({
-		                url: "validate_login.php",
+		                url: "<?php echo SITE_URL; ?>/front_end/loginpage/validate_login.php",
 		                data: { 'login': '1', 'user': user, 'pass': pass },
 		                method: 'POST',
 		                success: function (data) {
@@ -86,7 +90,7 @@
 		                    */
 		                    if (data === "1") { 
 		                    	console.log("login successful")
-		                        document.location.href = 'welcomepage.html';
+		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/welcomepage.html';
 		                    }
 		                    if (data === "0") {
 		                    	console.log("can't log in");
