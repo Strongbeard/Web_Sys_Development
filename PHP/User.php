@@ -226,6 +226,16 @@ class User {
 		return false;
 	}
 	
+	public function getStudentTAs() {
+		if( $this->isStudent && $this->uid !== null ) {
+			$db = DB::getInstance();
+			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse FROM users as u1 INNER JOIN students_courses AS sc ON u1.userid = sc.userid INNER JOIN tas_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.userId = u2.userId WHERE u1.userid = :userid', array(
+				':userid' => $this->uid
+			));
+		}
+		return false;
+	}
+	
 	
 	// SET FUNCTIONS
 	
@@ -246,8 +256,12 @@ class User {
 		if( !is_int($crse) ) {
 			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
+		
+		if( ($rel === 'student' && !$this->isStudent) || ($rel === 'ta' && !$this->isTA) ) {
+			return false;
+		}
 	
-		if( $this->isStudent && $this->uid !== null ) {
+		if($this->uid !== null ) {
 			$db = DB::getInstance();
 			try {
 				return $db->prep_execute('INSERT INTO ' . $rel . 's_courses (userid, subj, crse) VALUES (:userid, :subj, :crse)', array(
