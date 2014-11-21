@@ -41,6 +41,12 @@
 						<img id="url_password" src="./images/passicon.png" alt="">
 
 					</label>
+					<section id="chkbox">
+						Are you a:
+						<input type="checkbox" id="isStudent" value="student"> <span class="checkbox">Student</span>
+  						<input type="checkbox" id="isTA" value="TA"><span class="checkbox">TA</span>
+  						<input type="checkbox" id="isTutor" value="tutor"><span class="checkbox">Tutor</span>
+  					</section>
 				
 
 					<div id="submit">
@@ -72,12 +78,15 @@
 				var email = $('#email').val();
 				var password = $('#password').val();
 				var confirm_password = $('#confirm_password').val();
-
+				var isTA = $('#isTA').is(':checked');
+				var isStudent = $('#isStudent').is(':checked');
+				var isTutor = $('#isTutor').is(':checked');
+				console.log ('checkboxes ' + isStudent + isTA + isTutor);
 
 				$('input').removeClass('error');
 				$('#login_error').empty();
 
-				if (!name || !email || !password) {
+				if (!name || !email || !password || (isTA || isStudent || isTutor) === false) {
 					//highlight fields that aren't completed
 					if (!name) {
 						$('#name').addClass('error');
@@ -91,8 +100,11 @@
 					if (!confirm_password) {
 						$('#confirm_password').addClass('error');
 					}
+					if ((isTA || isStudent || isTutor)===false) {
+						$('#chkbox').addClass('error');
+						$('#login_error').html("Please select whether you are a student, TA, or tutor");
+					}
 					$('#login_error').html("Field(s) blank");
-					console.log("error");
 					error = true;
 				}
 
@@ -128,7 +140,7 @@
 
 					$.ajax({
 		                url: "validate_login.php",
-		                data: { 'register': '1', 'firstName': first_name, 'lastName': last_name, 'email': email, 'password': password },
+		                data: { 'register': '1', 'firstName': first_name, 'lastName': last_name, 'email': email, 'password': password, 'isTA': isTA, 'isStudent':isStudent, 'isTutor' : isTutor},
 		                method: 'POST',
 		                success: function (data) {
 		                    data = $.trim(data);

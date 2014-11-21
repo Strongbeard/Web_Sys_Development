@@ -46,7 +46,7 @@ section#formBox_password {
 	margin: 40px auto;
 	padding: 24px;
 	width: 327px;
-	height: 630px;
+	height: 650px;
 }
 
 form.loginForm label {
@@ -216,7 +216,7 @@ form.loginForm textarea {
 }
 
 .error {
-	border: 2px solid red;
+	background-color: pink;
 	
 }
 
@@ -224,4 +224,8 @@ form.loginForm textarea {
 	color: red;
 	padding: 0;
 	height: 10px;
+}
+.checkbox {
+	display: inline-block;
+	width: 60px;
 }

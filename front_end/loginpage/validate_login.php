@@ -40,15 +40,19 @@
 		}
 
 		if (isset($_POST['register'])) {
-			$empty = empty($_POST['firstName']) || empty($_POST['lastName']) || empty($_POST['email']) || empty($_POST['password']); 
-			if( isset($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password']) && $empty == false) { 
+			$empty = empty($_POST['firstName']) || empty($_POST['lastName']) || empty($_POST['email']) || empty($_POST['password']) 
+					|| empty($_POST['isStudent']) || empty($_POST['isTA']) || empty($_POST['isTutor']); 
+			if( isset($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['isStudent'], $_POST['isTA'], $_POST['isTutor']) && $empty == false) { 
 
 				$firstName = mysql_real_escape_string(stripslashes($_POST['firstName']));
 				$lastName = mysql_real_escape_string(stripslashes($_POST['lastName']));
 				$email = mysql_real_escape_string(stripslashes($_POST['email']));
 				$password = mysql_real_escape_string(stripslashes($_POST['password']));
+				$isStudent = mysql_real_escape_string(stripslashes($_POST['isStudent']));
+				$isTA = mysql_real_escape_string(stripslashes($_POST['isTA']));
+				$isTutor = mysql_real_escape_string(stripslashes($_POST['isTutor']));
 
-				$user = User::withValues($email, $password, true); //TO DO: currently leaves names fields blank, set to TA by default -- bug????
+				$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName); 
 				if ($user === null) { //check if error instantiating user (password too short)
 					echo 0;
 				}

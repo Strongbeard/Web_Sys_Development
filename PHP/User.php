@@ -68,7 +68,9 @@ class User {
 	
 	// Constructor builds a new user from parameters
 	public static function withValues( $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
-		$instance = new self(null, $email, $password, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
+		$instance = new self(null, $email, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
+
+							
 		if( !$instance->setPassword($password) ) {
 			return null;
 		}
