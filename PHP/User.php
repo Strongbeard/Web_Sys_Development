@@ -56,7 +56,7 @@ class User {
 			return null;
 		}
 		
-		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['email'], $passwordRows[0]['password'], $usersRows[0]['isStudent'], $usersRows[0]['isTA'], $usersRows[0]['isTutor'], $usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'] );
+		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['email'], (bool)$usersRows[0]['isStudent'], (bool)$usersRows[0]['isTA'], (bool)$usersRows[0]['isTutor'], (bool)$usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'] );
 		if( empty($passwordRows[0]['password']) ) {
 			return null;
 		}
@@ -164,21 +164,22 @@ class User {
 			':lastName' => $this->lastName
 		));
 		
-		if( !$user_result ) {
+		$password_result = 0;
+		if( $this->updateUID() ) {
+			$password_result = $db->prep_execute($password_string . ';',array(
+				':userid' => $this->uid,
+				':password' => $this->password
+			));
+		}
+		else {
 			return false;
 		}
-		
-		$this->updateUID();
-		$password_result = $db->prep_execute($password_string . ';',array(
-			':userid' => $this->uid,
-			':password' => $this->password
-		));
 			
-		if( !$password_result ) {
-			return false;
+		if( $user_result || $password_result ) {
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	// GET FUNCTIONS
@@ -299,7 +300,11 @@ class User {
 		$result = $db->prep_execute( 'SELECT userid FROM users WHERE email = :email;', array(
 			':email' => $this->email
 		));
-		$this->uid = $result[0]['userid'];
+		if( isset($result) && isset($result[0]) && isset($result[0]['userid']) ) {
+			$this->uid = $result[0]['userid'];
+			return true;
+		}
+		return false;
 	}
 }
 ?>
