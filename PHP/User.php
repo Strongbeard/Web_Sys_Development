@@ -223,13 +223,28 @@ class User {
 				':userid' => $this->uid
 			));
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	
 	// SET FUNCTIONS
+	
+	public function addStudentCourse( $subj, $crse ) {
+		if( $this->isStudent && $this->uid !== null ) {
+			$db = DB::getInstance();
+			try {
+				return $db->prep_execute('INSERT INTO students_courses (userid, subj, crse) VALUES (:userid, :subj, :crse)', array(
+					':userid' => $this->uid,
+					':subj' => $subj,
+					':crse' => $crse
+				));
+			}
+			catch( PDOException $Exception ) {
+				return false;
+			}
+		}
+		return false;
+	}
 	
 	public function setEmail( $email ) {
 		if( is_string($email) && !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
