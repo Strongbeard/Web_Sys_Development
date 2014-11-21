@@ -229,19 +229,28 @@ class User {
 	
 	// SET FUNCTIONS
 	
-	public function addStudentCourse( $subj, $crse ) {
+	public function addUserCourse( $rel, $subj, $crse ) {
 		// Argument Type Error Handling
+		if( !is_string($rel) ) {
+			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+		}
+		else {
+			$rel = strtolower($rel);
+			if( $rel !== 'student' && $rel !== 'ta' ) {
+				throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+			}
+		}
 		if( !is_string($subj) ) {
-			throw new InvalidArgumentException('USER::addStudentCourse(string $subj, int $crse) => $subj should be a string.');
+			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
 		}
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::addStudentCourse(string $subj, int $crse) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
 	
 		if( $this->isStudent && $this->uid !== null ) {
 			$db = DB::getInstance();
 			try {
-				return $db->prep_execute('INSERT INTO students_courses (userid, subj, crse) VALUES (:userid, :subj, :crse)', array(
+				return $db->prep_execute('INSERT INTO ' . $rel . 's_courses (userid, subj, crse) VALUES (:userid, :subj, :crse)', array(
 					':userid' => $this->uid,
 					':subj' => strtoupper($subj),
 					':crse' => $crse
@@ -254,19 +263,28 @@ class User {
 		return false;
 	}
 	
-	public function removeStudentCourse( $subj, $crse ) {
+	public function removeUserCourse( $rel, $subj, $crse ) {
 		// Argument Type Error Handling
+		if( !is_string($rel) ) {
+			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+		}
+		else {
+			$rel = strtolower($rel);
+			if( $rel !== 'student' && $rel !== 'ta' ) {
+				throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+			}
+		}
 		if( !is_string($subj) ) {
-			throw new InvalidArgumentException('USER::remoteStudentCourse(string $subj, int $crse) => $subj should be a string.');
+			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
 		}
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::remoteStudentCourse(string $subj, int $crse) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
 	
 		if( $this->uid !== null ) {
 			$db = DB::getInstance();
 			try {
-				return $db->prep_execute('DELETE FROM students_courses WHERE userid = :userid AND subj = :subj AND crse = :crse', array(
+				return $db->prep_execute('DELETE FROM ' . $rel . 's_courses WHERE userid = :userid AND subj = :subj AND crse = :crse', array(
 					':userid' => $this->uid,
 					':subj' => strtoupper($subj),
 					':crse' => $crse
