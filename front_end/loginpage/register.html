@@ -53,7 +53,7 @@
 						<input type="image" src="./images/forgot.png" id="forgot" value="Sign In">
 					</div>
 					
-					<div id="links_right"><a href="login.html" id="back_to_sign"> back to Sign in Page</a></div>
+					<div id="links_right"><a href="login.php" id="back_to_sign"> back to Sign in Page</a></div>
 
 
 				</form>
@@ -156,7 +156,7 @@
 		                    */
 							if (data === "2") { 
 		                    	console.log("login successful")
-		                        document.location.href = '../index.html';
+		                        document.location.href = '../welcomepage.html';
 		                    }
 		                    if (data === "1") { 
 		                         $('#login_error').html("email already exists in system or not an rpi.edu email");

@@ -49,6 +49,15 @@ section#formBox_password {
 	height: 650px;
 }
 
+section#formBox_password_small_heigh {
+	background-color: #eee;
+	border: 1px solid black;
+	border-radius: 10px;
+	margin: 40px auto;
+	padding: 24px;
+	width: 327px;
+	height: 270px;
+}
 form.loginForm label {
 	display: block;
 	margin: 6px 0;
@@ -212,7 +221,19 @@ form.loginForm textarea {
 	-moz-transition: color 1s linear;
 	-webkit-transition: color 1s linear;
 	-o-transition: color 1s linear;
-
+}
+#back_to_sign_forgot_password {
+	float:right;
+	position:relative;
+	padding-top:15px;
+	margin-right:1px;
+	color:blue;
+	font-size:16px;
+	text-decoration:none;
+	transition: color 1s linear;
+	-moz-transition: color 1s linear;
+	-webkit-transition: color 1s linear;
+	-o-transition: color 1s linear;
 }
 
 .error {
