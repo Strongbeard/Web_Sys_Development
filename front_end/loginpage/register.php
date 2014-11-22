@@ -1,3 +1,6 @@
+<?php
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,7 +16,7 @@
 
 	<body>
 		<div id="centre">
-			<h1><img src="./images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
+			<h1><img src="<?php echo SITE_URL; ?>/front_end/loginpage/images/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</h1>
 			<section id="formBox_password">
 				<h2>Registration</h2>
 				<p>Registration is easy! Enter your information to create a TA Scheduler account. Then select submit.</p>
@@ -27,18 +30,18 @@
 					<label>
 						<p>Email: <p>
 						<input type="text" name="email" class="url" id="email" placeholder="E-mail Address"/>
-						<img id="url_user" src="./images/mailicon.png" alt="">
+						<img id="url_user" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/mailicon.png" alt="">
 					</label>
 					<label>
 						Password:
 						<input type="password" name="password" class="url" id="password" placeholder="Password">
-						<img id="url_password" src="./images/passicon.png" alt="">
+						<img id="url_password" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/passicon.png" alt="">
 
 					</label>
 					<label>
 						Confirm Password:
 						<input type="password" name="confirm_password" class="url" id="confirm_password" placeholder="Confirm password">
-						<img id="url_password" src="./images/passicon.png" alt="">
+						<img id="url_password" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/passicon.png" alt="">
 
 					</label>
 					<section id="chkbox">
@@ -50,7 +53,7 @@
 				
 
 					<div id="submit">
-						<input type="image" src="./images/forgot.png" id="forgot" value="Sign In">
+						<input type="image" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/forgot.png" id="forgot" value="Sign In">
 					</div>
 					
 					<div id="links_right"><a href="login.php" id="back_to_sign"> back to Sign in Page</a></div>

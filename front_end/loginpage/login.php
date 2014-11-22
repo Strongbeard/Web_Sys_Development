@@ -41,7 +41,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 						<input type="image" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/submit.png" id="submit2" value="Sign In">
 					</div>
 					
-					<div id="links_right"><a href="register.html">Not a Member Yet?</a></div>
+					<div id="links_right"><a href="register.php">Not a Member Yet?</a></div>
 
 
 				</form>
