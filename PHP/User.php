@@ -3,7 +3,7 @@ require_once(dirname(dirname(__FILE__)) . '/config.php');
 require_once(SITE_ROOT . '\PHP\DB.php');
 
 class User {
-	// --- VARIABLES ---
+	// ############################### VARIABLES ###############################
 	
 	protected $uid = null;
 	protected $password = '';
@@ -16,11 +16,12 @@ class User {
 	protected $lastName = null;
 	
 	
-	// --- CONSTRUCTORS ---
+	// ############################# CONSTRUCTORS ##############################
 	
 	// Private constructor helper function. Called by fromDatabase and
 	// withValues
 	private function __construct( $uid, $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
+		// Calls set functions of all variables for invalid argument errors
 		$this->uid = $uid;
 		if( !($this->setEmail($email) &&
 		$this->setIsAdmin($isAdmin) &&
@@ -41,56 +42,73 @@ class User {
 			return null;
 		}
 		
-		// Extract user information from database
+		// Get user info from database's user table
 		$db = DB::getInstance();
 		$usersRows = $db->prep_execute('SELECT * FROM users WHERE ' . $unique_column . ' = :value', array(
 			':value' => $value
 		));
+		
+		// Return null if no user found
 		if( empty($usersRows) ) {
 			return null;
 		}
+		
+		// Get user password from database's password table
 		$passwordRows = $db->prep_execute('SELECT * FROM passwords WHERE userid = :userid;', array(
 			':userid' => $usersRows[0]['userId']
 		));
+		
+		// Return null if user not in password table
 		if( empty($passwordRows) ) {
 			return null;
 		}
 		
+		// Call private user constructor with database information
 		$instance = new self( $usersRows[0]['userId'], $usersRows[0]['email'], (bool)$usersRows[0]['isStudent'], (bool)$usersRows[0]['isTA'], (bool)$usersRows[0]['isTutor'], (bool)$usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'] );
+		
+		// Set password or return null if no password
 		if( empty($passwordRows[0]['password']) ) {
 			return null;
 		}
 		else {
 			$instance->password = $passwordRows[0]['password'];
 		}
+		
+		// Return new user object
 		return $instance;
 	}
 	
 	// Constructor builds a new user from parameters
 	public static function withValues( $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
+		// Calls private user constructor with provided arguments
 		$instance = new self(null, $email, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
 
-							
+		// Sets password. Returns null on error
 		if( !$instance->setPassword($password) ) {
 			return null;
 		}
+		
+		// Returns new user object
 		return $instance;
 	}
 	
 	
-	// --- FUNCTIONS ---
+	// ########################## ACCESSOR FUNCTIONS ###########################
 	
 	// Removes user with unique id from database
 	public static function deleteFromDB($unique_column, $value) {
+		// 
 		if( !USER::validUniqueColumn($unique_column) ) {
 			throw new Exception('Column to select user from does not exist.');
 		}
 		
+		// Removed the user row with unique column from database
 		$db = DB::getInstance();
 		$result = $db->prep_execute('DELETE FROM users WHERE ' . $unique_column . ' = :value;', array(
 			':value' => $value
 		));
 		
+		// Return true if a user was deleted. Otherwise, return false.
 		if($result) {
 			return true;
 		}
@@ -154,6 +172,7 @@ class User {
 			$password_string .= 'INSERT INTO passwords (userid,password) VALUES (:userid,:password) ON DUPLICATE KEY UPDATE password = VALUES(password)';
 		}
 		
+		// Insert user info into database (or update if update flag true)
 		$user_result = $db->prep_execute( $user_string . ';', array(
 			':email' => $this->email,
 			':isStudent' => ($this->isStudent) ? 1 : 0,
@@ -164,6 +183,7 @@ class User {
 			':lastName' => $this->lastName
 		));
 		
+		// Get userId from database to use in password table
 		$password_result = 0;
 		if( $this->updateUID() ) {
 			$password_result = $db->prep_execute($password_string . ';',array(
@@ -174,7 +194,8 @@ class User {
 		else {
 			return false;
 		}
-			
+		
+		// Return true if something was altered or inserted.
 		if( $user_result || $password_result ) {
 			return true;
 		}
@@ -184,38 +205,47 @@ class User {
 	
 	// GET FUNCTIONS
 	
+	// Return email
 	public function getEmail() {
 		return $this->email;
 	}
 	
+	// Return admin flag
 	public function getIsAdmin() {
 		return $this->isAdmin;
 	}
 	
+	// Return student flag
 	public function getIsStudent() {
 		return $this->isStudent;
 	}
 	
+	// Return TA flag
 	public function getIsTA() {
 		return $this->isTA;
 	}
 	
+	// Return Tutor flag
 	public function getIsTutor() {
 		return $this->isTutor;
 	}
 	
+	// Return uid
 	public function getUserId() {
 		return $this->uid;
 	}
 	
+	// Return User's first name
 	public function getFirstName() {
 		return $this->firstName;
 	}
 	
+	// Return User's last name
 	public function getLastName() {
 		return $this->lastName;
 	}
 	
+	// Return an array with database course rows that the student is enrolled in
 	public function getStudentCourses() {
 		if( $this->isStudent && $this->uid !== null) {
 			$db = DB::getInstance();
@@ -226,6 +256,7 @@ class User {
 		return false;
 	}
 	
+	// Return an array with database TAs that are mapped to student's courses
 	public function getStudentTAs() {
 		if( $this->isStudent && $this->uid !== null ) {
 			$db = DB::getInstance();
@@ -237,30 +268,37 @@ class User {
 	}
 	
 	
-	// SET FUNCTIONS
+	// ########################## MODIFIER FUNCTIONS ###########################
 	
+	// Creates a mapping in the database table students_courses or tas_courses
+	// depending on $rel's value. Maps students or tas to courses.
 	public function addUserCourse( $rel, $subj, $crse ) {
-		// Argument Type Error Handling
+		// --- Argument Type Error Handling ---
+		
+		// $rel is a string
 		if( !is_string($rel) ) {
 			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
 		}
-		else {
+		else { // $rel is 'student' or 'ta'
 			$rel = strtolower($rel);
 			if( $rel !== 'student' && $rel !== 'ta' ) {
 				throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
 			}
 		}
+		// $subj is a string
 		if( !is_string($subj) ) {
 			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
 		}
+		// $crse is an int
 		if( !is_int($crse) ) {
 			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
-		
+		// User's ta or student flag is true for the corresponding $rel option
 		if( ($rel === 'student' && !$this->isStudent) || ($rel === 'ta' && !$this->isTA) ) {
 			return false;
 		}
-	
+
+		// If user has uid (is in database), add user-course mapping to database
 		if($this->uid !== null ) {
 			$db = DB::getInstance();
 			try {
@@ -271,30 +309,39 @@ class User {
 				));
 			}
 			catch( PDOException $Exception ) {
+				// Return false if there is an error
 				return false;
 			}
 		}
+		// Return false if user not in database
 		return false;
 	}
 	
+	// Removes mapping in the database table students_courses or tas_courses
+	// depending on $rel's value.
 	public function removeUserCourse( $rel, $subj, $crse ) {
 		// Argument Type Error Handling
+		
+		// $rel is a string
 		if( !is_string($rel) ) {
 			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
 		}
-		else {
+		else { // $rel is either 'student' or 'ta'
 			$rel = strtolower($rel);
 			if( $rel !== 'student' && $rel !== 'ta' ) {
 				throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
 			}
 		}
+		// $subj is a string
 		if( !is_string($subj) ) {
 			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
 		}
+		// $crse is an int
 		if( !is_int($crse) ) {
 			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
-	
+
+		// If user has uid (is in database), remove user-course mapping to database
 		if( $this->uid !== null ) {
 			$db = DB::getInstance();
 			try {
@@ -305,12 +352,16 @@ class User {
 				));
 			}
 			catch( PDOException $Exception ) {
+				// Return false if a database error occures
 				return false;
 			}
 		}
+		// Return false if user not in database
 		return false;
 	}
 	
+	// Validates and sets the email address of the user. DOES NOT STORE IN
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setEmail( $email ) {
 		if( is_string($email) && !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
 			$this->email = $email;
@@ -319,6 +370,8 @@ class User {
 		return false;
 	}
 	
+	// Validates and sets the admin flag of the user. DOES NOT STORE IN
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setIsAdmin( $isAdmin ) {
 		if( filter_var( $isAdmin, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) !== null ) {
 			$this->isAdmin = $isAdmin;
@@ -327,6 +380,8 @@ class User {
 		return false;
 	}
 	
+	// Validates and sets the TA flag of the user. DOES NOT STORE IN
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setIsTA( $isTA ) {
 		if( filter_var( $isTA, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) !== null ) {
 			$this->isTA = $isTA;
@@ -335,6 +390,8 @@ class User {
 		return false;
 	}
 	
+	// Validates and sets the tutor flag of the user. DOES NOT STORE IN
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setIsTutor( $isTutor ) {
 		if( filter_var( $isTutor, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) !== null ) {
 			$this->isTutor = $isTutor;
@@ -343,6 +400,8 @@ class User {
 		return false;
 	}
 	
+	// Validates and sets the student flag of the user. DOES NOT STORE IN
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setIsStudent( $isStudent ) {
 		if( filter_var( $isStudent, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) !== null ) {
 			$this->isStudent = $isStudent;
@@ -351,6 +410,8 @@ class User {
 		return false;
 	}
 	
+	// Validates, hashes, and sets the password of the user. DOES NOT STORE IN
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setPassword( $password ) {
 		if( strlen($password) > 8 ) {
 			$this->password = password_hash( $password, PASSWORD_DEFAULT );
@@ -359,6 +420,8 @@ class User {
 		return false;
 	}
 	
+	// Validates and sets the first name of the user. DOES NOT STORE IN 
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setFirstName( $firstname ) {
 		if( is_string($firstname) && !empty($firstname) ) {
 			$this->firstName = $firstname;
@@ -367,6 +430,8 @@ class User {
 		return false;
 	}
 	
+	// Validates and sets the last name of the user. DOES NOT STORE IN 
+	// DATABASE! Call USER::store(bool) to store in database.
 	public function setLastName( $lastname ) {
 		if( is_string($lastname) && !empty($lastname) ) {
 			$this->lastName = $lastname;
@@ -386,12 +451,16 @@ class User {
 		return true;
 	}
 	
-	// Fetched the userID from the database & updates the class
+	// Fetched the userID from the database & updates the class. Return true on
+	// successful update. False otherwise.
 	private function updateUID() {
+		// Get userid from database
 		$db = DB::getInstance();
 		$result = $db->prep_execute( 'SELECT userid FROM users WHERE email = :email;', array(
 			':email' => $this->email
 		));
+		
+		// If result is set, set the uid and return true. otherwise return false.
 		if( isset($result) && isset($result[0]) && isset($result[0]['userid']) ) {
 			$this->uid = $result[0]['userid'];
 			return true;
