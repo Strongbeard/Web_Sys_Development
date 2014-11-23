@@ -317,6 +317,33 @@ class User {
 		return false;
 	}
 	
+	public function addTACourseWithTA_Code( $ta_code ) {
+		if( $this->uid !== null &&  $this->isTA === true) {
+			require_once(SITE_ROOT . '/PHP/Course.php');
+			$course = COURSE::withTA_Code( $ta_code );
+			
+			$db = DB::getInstance();
+			try {
+				if( $course !== null ) {
+					$result = $db->prep_execute( 'INSERT INTO tas_courses (userid, subj, crse) VALUES (:userid, :subj, :crse)', array(
+						':userid' => $this->uid,
+						':subj' => $course->getSubj(),
+						':crse' => $course->getCrse()
+					));
+					
+					if( !empty($result) ) {
+						return true;
+					}
+				}
+			}
+			catch( PDOException $Exception ) {
+				// Return false if there is an error
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	// Removes mapping in the database table students_courses or tas_courses
 	// depending on $rel's value.
 	public function removeUserCourse( $rel, $subj, $crse ) {
