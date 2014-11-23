@@ -1,3 +1,8 @@
+<?php
+require_once(dirname(dirname(__FILE__)) . '/config.php');
+require(SITE_ROOT . '/php/check_logged_in.php');
+?>
+
 <!DOCTYPE html>
 <html><head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

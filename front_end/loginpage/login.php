@@ -90,7 +90,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 		                    */
 		                    if (data === "1") { 
 		                    	console.log("login successful")
-		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/welcomepage.html';
+		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/welcomepage.php';
 		                    }
 		                    if (data === "0") {
 		                    	console.log("can't log in");
