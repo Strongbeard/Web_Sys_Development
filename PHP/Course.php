@@ -9,20 +9,22 @@ class course{
     protected $crse;
 	protected $name;
 	protected $inDB;
+	protected $ta_code;
     
 	// ############################# CONSTRUCTORS ##############################
 	
-	private function __construct($subj, $crse, $name = '', $inDB = false){
+	private function __construct($subj, $crse, $ta_code, $name = '', $inDB = false){
 		$this->setSubj($subj);
 		$this->setCrse($crse);
 		$this->setName($name);
 		$this->setInDB($inDB);
+		$this->ta_code = $ta_code;
 	}
 	
 	public static function fromDatabase($subj, $crse) {
 		$db = DB::getInstance();
 		
-		$courseRows = $db->prep_execute('SELECT * FROM courses WHERE subj = :subj AND crse = :crse', array(
+		$courseRows = $db->prep_execute('SELECT * FROM courses WHERE subj = :subj AND crse = :crse;', array(
 			':subj' => $subj,
 			':crse' => $crse
 		));
@@ -31,21 +33,47 @@ class course{
 			return null;
 		}
 		
-		return new self($subj, $crse, $courseRows[0]['name'],true);
+		return new self($subj, $crse, $courseRows[0]['ta_code'], $courseRows[0]['name'], true);
+	}
+	
+	public static function withValues($subj, $crse, $name) {
+		return new self( $subj, $crse, COURSE::generateRandomString(), $name );
+	}
+	
+	public static function withTA_Code( $ta_code ) {
+		if( !is_string($ta_code) || strlen($ta_code) !== 50 ) {
+			throw new InvalidArgumentException('COURSE::withTA_Code(string $ta_code) => $ta_code should be a 50-character string.');
+		}
+		
+		$db = DB::getInstance();
+		
+		$courseRows = $db->prep_execute('SELECT * from courses WHERE ta_code = :ta_code;', array(
+			':ta_code' => $ta_code
+		));
+		
+		return (empty($courseRows)) ? null : new self($courseRows[0]['subj'], intval($courseRows[0]['crse']), $courseRows[0]['ta_code'], $courseRows[0]['name'], true);
 	}
 	
 	// ########################## ACCESSOR FUNCTIONS ###########################
 	
 	public function getSubj() {
-		return $subj;
+		return $this->subj;
 	}
 	
 	public function getCrse() {
-		return $crse;
+		return $this->crse;
 	}
 	
 	public function getName() {
-		return $name;
+		return $this->name;
+	}
+	
+	public function getTA_Code() {
+		return $ta_code;
+	}
+	
+	public function validate_ta_code( $code ) {
+		return ($this->ta_code === $code) ? true : false;
 	}
 	
 	// ########################## MODIFIER FUNCTIONS ###########################
@@ -79,7 +107,7 @@ class course{
 	}
 	
 	public function store($update = false) {
-		
+		$db = DB::getInstance();
 	}
 	
 	// ########################## STATIC DB FUNCTIONS ##########################
@@ -111,6 +139,15 @@ class course{
 		}
 		
 		return $db->prep_execute($pstmt, $pstmt_array);
+	}
+	
+	private static function generateRandomString($length = 50) {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, strlen($characters) - 1)];
+		}
+		return $randomString;
 	}
 }
 ?>

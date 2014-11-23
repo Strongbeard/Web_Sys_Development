@@ -9,11 +9,11 @@ INSERT IGNORE INTO passwords(userid, password) VALUES (1,'$2y$10$KN0.2dx2J7ZCj1a
 INSERT IGNORE INTO passwords(userid, password) VALUES (2,'$2y$10$767S3Y8D7uui6wtKtrXJge7IgE8Wks0qq2MrpgRwGh8bkUTGfandy');
 
 /* COURSES */
-INSERT IGNORE INTO courses(name, subj, crse) VALUES ( 'BASIC DRAWING', 'ARTS', 1200 );
-INSERT IGNORE INTO courses(name, subj, crse) VALUES ( 'ART HISTORY I:FROM PALEOLITHIC TO RENAISSANCE', 'ARTS', 2530 );
-INSERT IGNORE INTO courses(name, subj, crse) VALUES ( 'NETWORKING LABORATORY II', 'CSCI', 4660 );
-INSERT IGNORE INTO courses(name, subj, crse) VALUES ( '
-WEB SYSTEMS DEVELOPMENT', 'ITWS', 2110 );
+INSERT IGNORE INTO courses(name, subj, crse, ta_code) VALUES ( 'BASIC DRAWING', 'ARTS', 1200, '30aggahfngg4ccmp8engi3v3l75zs9m4x5m0ntfe5ouppd6cny' );
+INSERT IGNORE INTO courses(name, subj, crse, ta_code) VALUES ( 'ART HISTORY I:FROM PALEOLITHIC TO RENAISSANCE', 'ARTS', 2530, '4wvro8maf69fyfebobv6zqmvhjnz50p9gnw0uwkvnze8xabuof' );
+INSERT IGNORE INTO courses(name, subj, crse, ta_code) VALUES ( 'NETWORKING LABORATORY II', 'CSCI', 4660, 'tmtf2u0l9sut0q2xkscy1nal2mjqd9eubjmocd5uqlt9ao0nzu' );
+INSERT IGNORE INTO courses(name, subj, crse, ta_code) VALUES ( '
+WEB SYSTEMS DEVELOPMENT', 'ITWS', 2110, 'ip9yyrw4nmi42dzaishuckivkzov74kt8l6hbtldcu8mfzva03' );
 
 /* STUDENTS_COURSES */
 INSERT IGNORE INTO students_courses(userId, subj, crse) VALUES (1,'ARTS',1200);
