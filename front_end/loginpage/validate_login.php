@@ -51,8 +51,14 @@
 				$isStudent = mysql_real_escape_string(stripslashes($_POST['isStudent']));
 				$isTA = mysql_real_escape_string(stripslashes($_POST['isTA']));
 				$isTutor = mysql_real_escape_string(stripslashes($_POST['isTutor']));
+				
+				// Transforms strings into boolean values
+				$isStudent = ($isStudent === 'true') ? true : false;
+				$isTA = ($isTA === 'true') ? true : false;
+				$isTutor = ($isTutor === 'true') ? true : false;
 
-				$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName); 
+				$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName);
+
 				if ($user === null) { //check if error instantiating user (password too short)
 					echo 0;
 				}
