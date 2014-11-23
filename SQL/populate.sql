@@ -20,3 +20,6 @@ INSERT IGNORE INTO students_courses(userId, subj, crse) VALUES (1,'ARTS',1200);
 INSERT IGNORE INTO students_courses(userId, subj, crse) VALUES (1,'ARTS',2530);
 INSERT IGNORE INTO students_courses(userId, subj, crse) VALUES (1,'CSCI',4660);
 INSERT IGNORE INTO students_courses(userId, subj, crse) VALUES (1,'ITWS',2110);
+
+/* TAS_COURSES */
+INSERT IGNORE INTO tas_courses(userId,subj,crse) VALUES (2,'ARTS',1200);
