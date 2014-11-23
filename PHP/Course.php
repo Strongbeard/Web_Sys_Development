@@ -1,41 +1,85 @@
 <?php
-require_once('./DB.php');
-
-$db = DB::getInstance();
+require_once(dirname(dirname(__FILE__)) . '/config.php');
+require_once(SITE_ROOT . '\PHP\DB.php');
 
 class course{
-	protected $courseid=null;
-    protected $courseinfo
+	// ############################### VARIABLES ###############################
+	
+	protected $subj;
+    protected $crse;
+	protected $name;
+	protected $inDB;
     
-
-	protected function __construct($courseid){
-		if( empty($course) ) {
-			throw new Exception('Empty courseid');
+	// ############################# CONSTRUCTORS ##############################
+	
+	private function __construct($subj, $crse, $name = '', $inDB = false){
+		$this->setSubj($subj);
+		$this->setCrse($crse);
+		$this->setName($name);
+		$this->setInDB($inDB);
+	}
+	
+	public static function fromDatabase($subj, $crse) {
+		$db = DB::getInstance();
+		
+		$courseRows = $db->prep_execute('SELECT * FROM courses WHERE subj = :subj AND crse = :crse', array(
+			':subj' => $subj,
+			':crse' => $crse
+		));
+		
+		if( empty($courseRows) ) {
+			return null;
 		}
-		$this->courseid = $courseid;
-		$command="SELECT * FROM Courses WHERE courseId='$courseid'";
-		$result=mysql_query($command);
-		$this->courseinfo=mysql_fetch_array($result);
 		
-
+		return new self($subj, $crse, $courseRows[0]['name'],true);
 	}
 	
-		
-
+	// ########################## ACCESSOR FUNCTIONS ###########################
 	
-	public function searchCoursename(){
-		return $this->courseinfo['courseName'];
+	public function getSubj() {
+		return $subj;
 	}
-
-	private function isSecure() {
-		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+	
+	public function getCrse() {
+		return $crse;
 	}
-}
-
-   
-
-
-
-
+	
+	public function getName() {
+		return $name;
+	}
+	
+	// ########################## MODIFIER FUNCTIONS ###########################
+	
+	public function setSubj($subj) {
+		if( !is_string($subj) || empty($subj) ) {
+			throw new InvalidArgumentException('COURSE::__constructor(string $subj, int $crse, string $name, bool $inDB) => $subj should be a non-empty string.');
+		}
+		$this->subj = strtoupper($subj);
+	}
+	
+	public function setCrse($crse) {
+		if( !is_int($crse) ) {
+			throw new InvalidArgumentException('COURSE::__constructor(string $subj, int $crse, string $name, bool $inDB) => $crse should be an integer.');
+		}
+		$this->crse = $crse;
+	}
+	
+	public function setName($name) {
+		if( !is_string($name) ) {
+			throw new InvalidArgumentException('COURSE::__constructor(string $subj, int $crse, string $name, bool $inDB) => $name should be a string. Default is empty string.');
+		}
+		$this->name = strtoupper($name);
+	}
+	
+	public function setInDB($flag) {
+		if( !is_bool($flag) ) {
+			throw new InvalidArgumentException('COURSE::__constructor(string $subj, int $crse, string $name, bool $inDB) => $inDB should be boolean flag. Default is false.');
+		}
+		$this->inDB = $flag;
+	}
+	
+	public function store($update = false) {
+		
+	}
 }
 ?>
