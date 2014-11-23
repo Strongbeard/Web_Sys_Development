@@ -318,7 +318,7 @@ class User {
 	}
 	
 	public function addTACourseWithTA_Code( $ta_code ) {
-		if( $this->uid !== null &&  $this->isTA === true) {
+		if( $this->uid !== null ) {
 			require_once(SITE_ROOT . '/PHP/Course.php');
 			$course = COURSE::withTA_Code( $ta_code );
 			
@@ -332,6 +332,10 @@ class User {
 					));
 					
 					if( !empty($result) ) {
+						if( !$this->isTA ) {
+							$this->isTA = true;
+							$this->store(true);
+						}
 						return true;
 					}
 				}
