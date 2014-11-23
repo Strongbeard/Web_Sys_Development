@@ -43,14 +43,6 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				</section>
 				<section class="contact-details">
 					<!--I'm not sure if a category should be here-->
-					<h2>Classes Currently Taking?</h2>
-					<a href="#">Data Structures</a>
-					<a href="#">Webs Systems Development</a>
-					<a href="#">Introduction To Algorithms</a>
-					<a href="#">Networking Lab</a>
-				</section>
-				<section class="contact-details">
-					<!--I'm not sure if a category should be here-->
 					<h2>Are you also a:</h2>
 					<a href="welcomepage_for_TA.php">Teacher Assistant?</a>
 				</section>

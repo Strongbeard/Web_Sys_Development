@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.php');
 require(SITE_ROOT . '/php/check_logged_in.php');
+require_once(SITE_ROOT . '/PHP/User.php');
 ?>
 
 <!DOCTYPE html>
@@ -19,8 +20,8 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<nav>
 					<ul>
 						<li><a href="" class="current">home</a></li>
-						<li><a href="search_add.html">Search/Add TA</a></li>
-						<li><a href="_profile.html">Profile</a></li>
+						<li><a href="search_add.php">Search/Add TA</a></li>
+						<li><a href="_profile.php">Profile</a></li>
 						<li><a href="logout.php">Logout</a></li>
 						<li><a href=""></a></li>
 					</ul>
@@ -46,18 +47,11 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					<a href="#">Memo Kamikase</a>
 					<a href="#">Rick Platinin</a>
 				</section>
-				<section class="contact-details">
-					<!--I'm not sure if a category should be here-->
-					<h2>Classes Currently Taking?</h2>
-					<a href="#">Data Structures</a>
-					<a href="#">Webs Systems Development</a>
-					<a href="#">Introduction To Algorithms</a>
-					<a href="#">Networking Lab</a>
-				</section>
+				
 				<section class="contact-details">
 					<!--I'm not sure if a category should be here-->
 					<h2>Are you also a:</h2>
-					<a href="welcomepage_for_TA.html">Teacher Assistant?</a>
+					<a href="welcomepage_for_TA.php">Teacher Assistant?</a>
 				</section>
 			</aside>
 			<footer>

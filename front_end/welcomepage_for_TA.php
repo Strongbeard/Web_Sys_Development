@@ -42,13 +42,6 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					<a href="#">Earth and Fire</a>
 					<a href="#">General Psychology</a>
 				</section>
-				<section class="contact-details">
-					<h2>Classes Currently Taking?</h2>
-					<a href="#">Data Structures</a>
-					<a href="#">Webs Systems Development</a>
-					<a href="#">Introduction To Algorithms</a>
-					<a href="#">Networking Lab</a>
-				</section>
 			</aside>
 			<footer>
 				© 2014 TA Hunters
