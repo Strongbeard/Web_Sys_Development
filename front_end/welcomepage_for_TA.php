@@ -23,7 +23,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>
-						<li><a href="" class="current">home</a></li>
+						<li><a href="welcomepage_for_TA.php" class="current">home</a></li>
 						<li><a href="search_add_for_TA.php">Search/Add Student</a></li>
 						<li><a href="_profile_for_TA.php">Profile</a></li>
 						<li><a href="logout.php">Logout</a></li>
