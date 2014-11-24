@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.php');
-require(SITE_ROOT . '/php/check_logged_in.php');
 require_once(SITE_ROOT . '/PHP/User.php');
+require(SITE_ROOT . '/php/check_logged_in.php');
 ?>
 
 <!DOCTYPE html>
@@ -9,6 +9,12 @@ require_once(SITE_ROOT . '/PHP/User.php');
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>TA Scheduler</title>
 		<link rel="stylesheet" type="text/css" href="./resources/user.css">
+		<div class="upperright"> 
+			<?php	$firstname = $_SESSION['user']->getFirstName();
+						$lastname = $_SESSION['user']->getLastName();
+						echo $firstname . " " . $lastname . "<br>";	
+			?> 
+		</div>
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -28,32 +34,54 @@ require_once(SITE_ROOT . '/PHP/User.php');
 				</nav>
 			</header>
 			<section class="courses">
-				
-					<figure>
-					 <p> Welcome Student to your portal page! </p>
+				<figure>
+					<?php
+						$var = $_SESSION['user']->getFirstName();
+						echo "<p> " . $var . " welcome to your portal page! </p>" . "<br>";	
+					?>
 					 <p> The calendar will come here? </p>
 					 <p> What else? </p>
-						
-					</figure>
-				
-				
+				</figure>	
 			</section>
+			
 			<aside>
 				<section class="popular-recipes">
 					<h2>Your TAs</h2>
-					<!--link to the TA's profile?-->
-					<a href="#">Alfred Hitman</a>
-					<a href="#">Tom Madrid</a>
-					<a href="#">Memo Kamikase</a>
-					<a href="#">Rick Platinin</a>
+					<?php
+						$var = $_SESSION['user']->getStudentTAs();
+						//u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse
+						foreach( $var as $ta_row ) {
+							echo "<a>". $ta_row['firstName'] . " " . $ta_row['lastName'] .  "</a>";
+						}	
+					?>
 				</section>
-				
+				<section class="contact-details">
+					<h2>Classes Currently Taking</h2>
+					<?php
+						$var = $_SESSION['user']->getStudentCourses();
+						//subj, crse 
+						foreach( $var as $ta_row ) {
+							echo "<a title='FULL COURSE NAME.'>". $ta_row['subj'] . " " . $ta_row['crse'] .  "</a>";
+						}	
+					?>
+				</section>
 				<section class="contact-details">
 					<!--I'm not sure if a category should be here-->
 					<h2>Are you also a:</h2>
+					<!--<?php/*
+						$t = getIsTA();
+
+						if ($t == 1) {
+								echo "<h2>You are also a TA:</h2>";
+								echo "<a href='welcomepage_for_TA.php'>click on this link to Go to the TA page</a>";
+						} else {
+								echo "Not a TA";
+						}*/
+					?>-->
 					<a href="welcomepage_for_TA.php">Teacher Assistant?</a>
 				</section>
 			</aside>
+			
 			<footer>
 				© 2014 TA Hunters
 			</footer>

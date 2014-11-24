@@ -34,7 +34,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 					</label>
 					<label>
 						Password:
-						<input type="password" name="password" class="url" id="password" placeholder="Password">
+						<input type="password" name="password" class="url" id="password" placeholder="Password must contain at least 9 characters">
 						<img id="url_password" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/passicon.png" alt="">
 
 					</label>

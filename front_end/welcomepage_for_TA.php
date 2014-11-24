@@ -7,6 +7,12 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>TA Scheduler</title>
 		<link rel="stylesheet" type="text/css" href="./resources/user.css">
+		<div class="upperright"> 
+			<?php	$firstname = $_SESSION['user']->getFirstName();
+						$lastname = $_SESSION['user']->getLastName();
+						echo $firstname . " " . $lastname . "<br>";	
+			?> 
+		</div>
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -28,7 +34,10 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			<section class="courses">
 				
 					<figure>
-					 <p> Welcome TA to your portal page! </p>
+					 <?php
+						$var = $_SESSION['user']->getFirstName();
+						echo "<p> " . $var . " welcome to your portal page! </p>" . "<br>";	
+					 ?>
 					 <p> The calendar will come here? </p>
 					 <p> What else? </p>
 						
