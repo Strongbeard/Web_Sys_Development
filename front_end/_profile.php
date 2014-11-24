@@ -62,6 +62,16 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<section class="contact-details">
 					<!--I'm not sure if a category should be here-->
 					<h2>Are you also a:</h2>
+					<!--<?php/*
+						$t = getIsTA();
+
+						if ($t == true) {
+								echo "<h2>You are also a TA:</h2>";
+								echo "<a href='welcomepage_for_TA.php'>click on this link to Go to your TA page</a>";
+						} else {
+								echo "Not a TA";
+						}*/
+					?>-->
 					<a href="welcomepage_for_TA.php">Teacher Assistant?</a>
 				</section>
 			</aside>

@@ -71,9 +71,9 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					<!--<?php/*
 						$t = getIsTA();
 
-						if ($t == 1) {
+						if ($t == true) {
 								echo "<h2>You are also a TA:</h2>";
-								echo "<a href='welcomepage_for_TA.php'>click on this link to Go to the TA page</a>";
+								echo "<a href='welcomepage_for_TA.php'>click on this link to Go to your TA page</a>";
 						} else {
 								echo "Not a TA";
 						}*/
