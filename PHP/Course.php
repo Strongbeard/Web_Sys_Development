@@ -123,6 +123,9 @@ class course{
 				return false;
 			}
 		}
+		else {
+			$this->setInDB(false);
+		}
 		
 		$this->subj = strtoupper($subj);
 		return true;
@@ -152,6 +155,9 @@ class course{
 				return false;
 			}
 		}
+		else {
+			$this->setInDB(false);
+		}
 		
 		$this->crse = $crse;
 		return true;
@@ -180,6 +186,9 @@ class course{
 			catch( PDOException $e) {
 				return false;
 			}
+		}
+		else {
+			$this->setInDB(false);
 		}
 		
 		$this->name = strtoupper($name);
