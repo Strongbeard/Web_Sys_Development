@@ -37,7 +37,24 @@ class course{
 	}
 	
 	public static function withValues($subj, $crse, $name) {
-		return new self( $subj, $crse, COURSE::generateRandomString(), $name );
+		$ta_code = COURSE::generateRandomString();
+		$instance = new self( $subj, $crse, $ta_code, $name );
+		
+		$db = DB::getInstance();
+		try {
+			$result = $db->prep_execute('INSERT INTO courses (subj, crse, name, ta_code) VALUES (:subj, :crse, :name, :ta_code);', array(
+				':subj' => strtoupper($subj),
+				':crse' => $crse,
+				':name' => strtoupper($name),
+				':ta_code' => $ta_code
+			));
+			if( $result ) {
+				$instance->setInDB(true);
+			}
+		}
+		catch( PDOException $e ) {}
+	
+		return $instance;
 	}
 	
 	public static function withTA_Code( $ta_code ) {
@@ -72,31 +89,101 @@ class course{
 		return $ta_code;
 	}
 	
+	public function getInDB() {
+		return $inDB;
+	}
+	
 	public function validate_ta_code( $code ) {
 		return ($this->ta_code === $code) ? true : false;
 	}
 	
 	// ########################## MODIFIER FUNCTIONS ###########################
 	
-	public function setSubj($subj) {
+	public function setSubj($subj, $setDB = false) {
 		if( !is_string($subj) || empty($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('COURSE::setSubj(string $subj, int $crse, string $name, bool $inDB) => $subj should be a non-empty 4-letter string.');
+			throw new InvalidArgumentException('COURSE::setSubj(string $subj, bool $setDB) => $subj should be a non-empty 4-letter string.');
 		}
+		if( !is_bool($setDB) ) {
+			throw new InvalidArgumentException('COURSE::setSubj(string $subj, bool $setDB) => $setDB should be a boolean.');
+		}
+
+		if( $setDB ) {
+			$db = DB::getInstance();
+			try {
+				$result = $db->prep_execute('UPDATE courses SET subj = :new_subj WHERE subj = :old_subj AND crse = :crse;', array(
+					':new_subj' => strtoupper($subj),
+					':old_subj' => $this->subj,
+					':crse' => $this->crse
+				));
+				if( !$result ) {
+					return false;
+				}
+			}
+			catch( PDOException $e) {
+				return false;
+			}
+		}
+		
 		$this->subj = strtoupper($subj);
+		return true;
 	}
 	
-	public function setCrse($crse) {
+	public function setCrse($crse, $setDB = false) {
 		if( !is_int($crse) ) {
 			throw new InvalidArgumentException('COURSE::setCrse(string $subj, int $crse, string $name, bool $inDB) => $crse should be an integer.');
 		}
+		if( !is_bool($setDB) ) {
+			throw new InvalidArgumentException('COURSE::setCrse(string $subj, bool $setDB) => $setDB should be a boolean.');
+		}
+		
+		if( $setDB ) {
+			$db = DB::getInstance();
+			try {
+				$result = $db->prep_execute('UPDATE courses SET crse = :new_crse WHERE subj = :subj AND crse = :old_crse;', array(
+					':subj' => $this->subj,
+					':new_crse' => $crse,
+					':old_crse' => $this->crse
+				));
+				if( !$result ) {
+					return false;
+				}
+			}
+			catch( PDOException $e) {
+				return false;
+			}
+		}
+		
 		$this->crse = $crse;
+		return true;
 	}
 	
-	public function setName($name) {
+	public function setName($name, $setDB = false) {
 		if( !is_string($name) ) {
 			throw new InvalidArgumentException('COURSE::setName(string $subj, int $crse, string $name, bool $inDB) => $name should be a string. Default is empty string.');
 		}
+		if( !is_bool($setDB) ) {
+			throw new InvalidArgumentException('COURSE::setName(string $subj, bool $setDB) => $setDB should be a boolean.');
+		}
+		
+		if( $setDB ) {
+			$db = DB::getInstance();
+			try {
+				$result = $db->prep_execute('UPDATE courses SET name = :new_name WHERE subj = :subj AND crse = :crse;', array(
+					':new_name' => $name,
+					':subj' => $this->subj,
+					':crse' => $this->crse
+				));
+				if( !$result ) {
+					return false;
+				}
+			}
+			catch( PDOException $e) {
+				return false;
+			}
+		}
+		
 		$this->name = strtoupper($name);
+		return true;
 	}
 	
 	public function setInDB($flag) {
@@ -104,6 +191,7 @@ class course{
 			throw new InvalidArgumentException('COURSE::setInDB(string $subj, int $crse, string $name, bool $inDB) => $inDB should be boolean flag. Default is false.');
 		}
 		$this->inDB = $flag;
+		return true;
 	}
 	
 	public function store($update = false) {
