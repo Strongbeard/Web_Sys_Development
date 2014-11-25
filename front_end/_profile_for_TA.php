@@ -23,9 +23,9 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>
-						<li><a href="welcomepage_for_TA.php">home</a></li>
+						<li><a href="welcomepage_for_TA.php">Home</a></li>
 						<li><a href="search_add_for_TA.php">Search/Add Student</a></li>
-						<li><a href="" class="current">Profile</a></li>
+						<li><a href="" class="current">Your Profile</a></li>
 						<li><a href="logout.php">Logout</a></li>
 						<li><a href=""></a></li>
 					</ul>
@@ -33,9 +33,14 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			</header>
 			<section class="courses">
 				<figure>
-					 <p> What is profile supposed to do?</p>
-					 <p>Name: Eric Example</p>
-						<p>Email: exampe@rpi.edu</p>
+					 <?php
+						$firstname = $_SESSION['user']->getFirstName();
+						$lastname = $_SESSION['user']->getLastName();
+						 echo "Name: " . $firstname . " " . $lastname . "<br>";
+						 
+						$email = $_SESSION['user']->getEmail();
+							echo "<p>Email: ". $email . "</a>";
+					?>
 				</figure>
 			</section>
 			<aside>

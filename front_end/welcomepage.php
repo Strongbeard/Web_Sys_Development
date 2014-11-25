@@ -25,14 +25,15 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>
-						<li><a href="welcomepage.php" class="current">home</a></li>
+						<li><a href="welcomepage.php" class="current">Home</a></li>
 						<li><a href="search_add.php">Search/Add TA</a></li>
-						<li><a href="_profile.php">Profile</a></li>
+						<li><a href="_profile.php">Your Profile</a></li>
 						<li><a href="logout.php">Logout</a></li>
 						<li><a href=""></a></li>
 					</ul>
 				</nav>
 			</header>
+			
 			<section class="courses">
 				<figure>
 					<?php
@@ -66,19 +67,14 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					?>
 				</section>
 				<section class="contact-details">
-					<!--I'm not sure if a category should be here-->
-					<h2>Are you also a:</h2>
-					<!--<?php/*
-						$t = getIsTA();
+					<?php
+						$t = $_SESSION['user']->getIsTA();
 
 						if ($t == true) {
 								echo "<h2>You are also a TA:</h2>";
 								echo "<a href='welcomepage_for_TA.php'>click on this link to Go to your TA page</a>";
-						} else {
-								echo "Not a TA";
-						}*/
-					?>-->
-					<a href="welcomepage_for_TA.php">Teacher Assistant?</a>
+						}
+					?>
 				</section>
 			</aside>
 			
