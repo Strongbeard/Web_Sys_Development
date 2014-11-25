@@ -508,6 +508,18 @@ class User {
 	
 	// ########################## STATIC DB FUNCTIONS ##########################
 	
+	// Return an array of User objects of all the Studentss in the database.
+	public static function getAllStudents() {
+		$allTAs = array();
+		$db = DB::getInstance();
+		$ta_rows = $db->prep_execute('SELECT email FROM users WHERE isStudent = 1;', array());
+		foreach( $ta_rows as $row ) {
+			$allTAs[] = USER::fromDatabase('email', $row['email']);
+		}
+		return $allTAs;
+	}
+	
+	// Return an array of User objects of all the TAs in the database.
 	public static function getAllTAs() {
 		$allTAs = array();
 		$db = DB::getInstance();
