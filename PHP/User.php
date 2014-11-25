@@ -247,13 +247,19 @@ class User {
 	
 	// Return an array with database course rows that the student is enrolled in
 	public function getStudentCourses() {
+		require_once(SITE_ROOT . '\PHP\Course.php');
+		$courses = array();
 		if( $this->isStudent && $this->uid !== null) {
 			$db = DB::getInstance();
-			return $db->prep_execute('SELECT subj, crse FROM students_courses WHERE userid = :userid', array(
+			$result = $db->prep_execute('SELECT subj, crse FROM students_courses WHERE userid = :userid', array(
 				':userid' => $this->uid
 			));
+			
+			foreach($result as $row) {
+				$courses[] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
+			}
 		}
-		return false;
+		return $courses;
 	}
 	
 	// Return an array with database TAs that are mapped to student's courses
