@@ -504,5 +504,18 @@ class User {
 		}
 		return false;
 	}
+	
+	
+	// ########################## STATIC DB FUNCTIONS ##########################
+	
+	public static function getAllTAs() {
+		$allTAs = array();
+		$db = DB::getInstance();
+		$ta_rows = $db->prep_execute('SELECT email FROM users WHERE isTA = 1;', array());
+		foreach( $ta_rows as $row ) {
+			$allTAs[] = USER::fromDatabase('email', $row['email']);
+		}
+		return $allTAs;
+	}
 }
 ?>
