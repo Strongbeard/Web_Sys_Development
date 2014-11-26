@@ -4,11 +4,13 @@ require_once(SITE_ROOT . '/PHP/User.php');
 require_once(SITE_ROOT . '/PHP/Course.php');
 require(SITE_ROOT . '/php/check_logged_in.php');
 ?>
+
 <!DOCTYPE html>
 <html><head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>TA Scheduler</title>
 		<link rel="stylesheet" type="text/css" href="./resources/user.css">
+		<link rel="stylesheet" type="text/css" href="./resources/table.css">
 		<div class="upperright"> 
 			<?php	$firstname = $_SESSION['user']->getFirstName();
 						$lastname = $_SESSION['user']->getLastName();
@@ -26,7 +28,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>
-						<?php
+					  <?php
 						$t = $_SESSION['user']->getIsAdmin();
 
 						if ($t == true) {
@@ -37,7 +39,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 						$t = $_SESSION['user']->getIsTA();
 
 						if ($t == true) {
-								echo "<li><a href='student.php'>Student</a><li>";
+								echo "<li><a href='student.php' class='current'>Student</a><li>";
 						}
 						?>
 						<?php
@@ -48,7 +50,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 						}
 						?>
 						<li><a href="search_add.php">Search/Add</a></li>
-						<li><a href="_profile.php" class="current">Profile</a></li>
+						<li><a href="_profile.php">Profile</a></li>
 					</ul>
 				</nav>
 			</header>
@@ -56,29 +58,39 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			<section class="courses">
 				<figure>
 					<?php
-						$firstname = $_SESSION['user']->getFirstName();
-						$lastname = $_SESSION['user']->getLastName();
-						 echo "Name: " . $firstname . " " . $lastname . "<br>";
-						 
-						$email = $_SESSION['user']->getEmail();
-							echo "<p>Email: ". $email . "</a>";
+						$var = $_SESSION['user']->getFirstName();
+						echo "<p> " . $var . " welcome to your portal page! </p>" . "<br>";	
 					?>
-				</figure>
+					 <table class="imagetable" width="560">
+					  <tr>
+							<th>Course Name</th><th>Hours</th><th>TA Name</th>
+						</tr>
+						<?php
+							$var = $_SESSION['user']->getStudentTAs();
+							//subj, crse 
+							foreach( $var as $ta_row ) {
+								$course = COURSE::fromDatabase($ta_row['subj'], intval($ta_row['crse']));
+								echo "<tr><td>" . $course->getName() . "</td><td> HOUR NEEDs TO BE FIXED </td><td>"  . $ta_row['firstName'] . " " . $ta_row['lastName'] . "</td><tr>";
+							}	
+						?>
+						</table>
+				</figure>	
 			</section>
 			
 			<aside>
-				<!--<section class="popular-recipes">
-					<?php/*
+				<section class="popular-recipes">
+					<?php
 						$t = $_SESSION['user']->getIsTA();
 
 						if ($t == true) {
 								echo "<h2>Are You a TA?</h2>";
 								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
 						    echo "<input type='submit' value='Submit'>";
-						}*/
+						}
 					?>
-				</section>-->
+				</section>
 			</aside>
+			
 			<footer>
 				© 2014 TA Hunters
 			</footer>

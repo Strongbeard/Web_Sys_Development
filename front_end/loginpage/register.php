@@ -159,7 +159,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 		                    */
 							if (data === "2") { 
 		                    	console.log("login successful")
-		                        document.location.href = '../welcomepage.php';
+		                        document.location.href = '../student.php';
 		                    }
 		                    if (data === "1") { 
 		                         $('#login_error').html("email already exists in system or not an rpi.edu email");

@@ -1,5 +1,7 @@
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once(SITE_ROOT . '../PHP/User.php');
+require_once(SITE_ROOT . '../PHP/Course.php');
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +92,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 		                    */
 		                    if (data === "1") { 
 		                    	console.log("login successful")
-		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/welcomepage.php';
+		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/student.php';
 		                    }
 		                    if (data === "0") {
 		                    	console.log("can't log in");

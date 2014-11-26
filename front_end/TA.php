@@ -1,9 +1,7 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.php');
-require_once(SITE_ROOT . '/PHP/User.php');
 require(SITE_ROOT . '/php/check_logged_in.php');
 ?>
-
 <!DOCTYPE html>
 <html><head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,8 +10,9 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		<div class="upperright"> 
 			<?php	$firstname = $_SESSION['user']->getFirstName();
 						$lastname = $_SESSION['user']->getLastName();
-						echo $firstname . " " . $lastname . "<br>";	
+						echo "Welcome " . $firstname . " " . $lastname . " ";	
 			?> 
+			<a href="logout.php">Logout</a>
 		</div>
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -25,59 +24,59 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>
-						<li><a href="welcomepage.php" class="current">Home</a></li>
-						<li><a href="search_add.php">Search/Add TA</a></li>
-						<li><a href="_profile.php">Your Profile</a></li>
-						<li><a href="logout.php">Logout</a></li>
-						<li><a href=""></a></li>
-					</ul>
-				</nav>
-			</header>
-			
-			<section class="courses">
-				<figure>
-					<?php
-						$var = $_SESSION['user']->getFirstName();
-						echo "<p> " . $var . " welcome to your portal page! </p>" . "<br>";	
-					?>
-					 <p> The calendar will come here? </p>
-					 <p> What else? </p>
-				</figure>	
-			</section>
-			
-			<aside>
-				<section class="popular-recipes">
-					<h2>Your TAs</h2>
-					<?php
-						$var = $_SESSION['user']->getStudentTAs();
-						//u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse
-						foreach( $var as $ta_row ) {
-							echo "<a>". $ta_row['firstName'] . " " . $ta_row['lastName'] .  "</a>";
-						}	
-					?>
-				</section>
-				<section class="contact-details">
-					<h2>Classes Currently Taking</h2>
-					<?php
-						$var = $_SESSION['user']->getStudentCourses();
-						//subj, crse 
-						foreach( $var as $ta_row ) {
-							echo "<a title='FULL COURSE NAME.'>". $ta_row['subj'] . " " . $ta_row['crse'] .  "</a>";
-						}	
-					?>
-				</section>
-				<section class="contact-details">
-					<?php
+						<?php
+						$t = $_SESSION['user']->getIsAdmin();
+
+						if ($t == true) {
+								echo "<li><a href='Admin.php'>Admin</a><li>";
+						}
+						?>
+						<?php
 						$t = $_SESSION['user']->getIsTA();
 
 						if ($t == true) {
-								echo "<h2>You are also a TA:</h2>";
-								echo "<a href='welcomepage_for_TA.php'>click on this link to Go to your TA page</a>";
+								echo "<li><a href='student.php'>Student</a><li>";
+						}
+						?>
+						<?php
+						$t = $_SESSION['user']->getIsTA();
+
+						if ($t == true) {
+								echo "<li><a href='TA.php' class='current'> TA</a><li>";
+						}
+						?>
+						<li><a href="search_add.php">Search/Add</a></li>
+						<li><a href="_profile.php">Profile</a></li>
+					</ul>
+				</nav>
+			</header>
+			<section class="courses">
+				
+					<figure>
+					 <?php
+						$var = $_SESSION['user']->getFirstName();
+						echo "<p> " . $var . " welcome to your portal page! </p>" . "<br>";	
+					 ?>
+					 <p> The calendar will come here? </p>
+					 <p> What else? </p>
+						
+					</figure>
+				
+				
+			</section>
+			<aside>
+				<section class="popular-recipes">
+					<?php
+						$t = $_SESSION['user']->getIsStudent();
+
+						if ($t == true) {
+								echo "<h2>Are You a Student?</h2>";
+								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
+						    echo "<input type='submit' value='Submit'>";
 						}
 					?>
 				</section>
 			</aside>
-			
 			<footer>
 				© 2014 TA Hunters
 			</footer>
