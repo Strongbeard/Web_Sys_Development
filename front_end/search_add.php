@@ -84,7 +84,16 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 						</hgroup>
 					</figure>
 			</section>
-			
+			<section id="results">
+				<span></span>
+				<table>
+					<thead>
+						
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</section>
 			<aside>
 				<!--<section class="popular-recipes">
 					<?php/*
@@ -98,15 +107,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					?>
 				</section>-->
 			</aside>
-			<section>
-				<table id="results">
-					<thead>
-						
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</section>
+			
 			<footer>
 				© 2014 TA Hunters
 			</footer>
@@ -116,7 +117,8 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		<script>
 			$('#search_ta_form').submit(function (event) {
 				event.preventDefault();
-
+				$('#results > span').empty();
+				$('#results > table').empty();
 				var ta_name = $('#search_ta').val();
 				//var search_class = $('#search_class').val();
 				//var search_school = $("#search_school option:selected" ).val();
@@ -127,7 +129,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					$('#search_ta').addClass('error');
 				}
 				else {
-					$('#results > tbody').empty();
+					
 					$.ajax({
 		                url: "./find.php",
 		                data: {'ta_name': ta_name},
@@ -136,8 +138,11 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                    data = $.trim(data);
 		                   	console.log("data: " + data.length);
 		                   	if (data.length > 0) {
-		                   		$('#results > thead').append("<tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Subject</th><th>Course</th><th>Name</th></tr>");
-		                   		$('#results > tbody').append(data);
+		                   		$('#results > table').append("<thead><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Subject</th><th>Course</th><th>Name</th></tr></thead>");
+		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
+		                   	}
+		                   	else {
+		                   		$('#results > span').html("No results");
 		                   	}
 		          
 		                 

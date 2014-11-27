@@ -89,6 +89,19 @@ footer {
 	text-align:right;"
 
 }
+#results {
+	float: none;
+	clear: both;
+	margin-left: 24px;
+	margin-bottom: 50px;
+}
+th {
+	border-bottom: 1px black solid;
+}
+th, td {
+	padding: 0px 5px 0px 5px;
+	text-align: left;
+}
 .error {
 	border: 1px solid red;
 }
