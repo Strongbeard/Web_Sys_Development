@@ -136,7 +136,8 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                method: 'GET',
 		                success: function (data) {
 		                    data = $.trim(data);
-		                   	console.log("data: " + data.length);
+		                   	//console.log("data: " + data.length);
+		                   	//console.log(data);
 		                   	if (data.length > 0) {
 		                   		$('#results > table').append("<thead><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Subject</th><th>Course</th><th>Name</th></tr></thead>");
 		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
