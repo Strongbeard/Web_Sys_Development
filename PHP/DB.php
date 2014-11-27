@@ -59,5 +59,39 @@ class DB {
 		}
 		return $rows;
 	}
+	
+	public function multi_prep_execute( $query_strings, $var_arrays ) {
+		if( count($query_strings) !== count($var_arrays) ) {
+			throw new InvalidArgumentException('DB::multi_prep_execute(array<string> $query_strings, array<array<>> $var_arrays) => The $query_strings array should be the same size as the $var_arrays array.');
+		}
+		
+		try {
+			$prepared_array = array();
+			foreach( $query_strings as $pstmt ) {
+				$prepared_array[] = $this->conn->prepare( $pstmt );
+			}
+			
+			$this->conn->beginTransaction();
+			
+			foreach($prepared_array as $index => $pstmt) {
+				$pstmt->execute($var_arrays[$index]);
+			}
+			
+			$this->conn->commit();
+		}
+		catch( PDOException $e ) {
+			$this->conn->rollBack();
+			throw $e;
+		}
+		
+		$rows = 0;
+		try {
+			$rows = $pstmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		catch( PDOException $Exception ) {
+			$rows = $pstmt->rowCount();
+		}
+		return $rows;
+	}
 }
 ?>

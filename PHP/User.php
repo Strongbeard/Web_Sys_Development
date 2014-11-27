@@ -67,12 +67,35 @@ class User {
 	// Constructor builds a new user from parameters
 	public static function withValues( $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
 		// Calls private user constructor with provided arguments
-		$instance = new self(null, $email, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
+		$instance = new self($email, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
 
 		// Sets password. Returns null on error
 		if( !$instance->setPassword($password) ) {
 			return null;
 		}
+		
+		$db = DB::getInstance();
+		try {
+			$result = $db->multi_prep_execute(['INSERT INTO users (email, isAdmin, isTA, isTutor, isStudent, firstName, lastName) VALUES (:email, :isAdmin, :isTA, :isTutor, :isStudent, :firstName, :lastName);', 'INSERT INTO passwords (email, password) VALUES (:email, :password);'], array(
+				[
+					':email' => $instance->getEmail(),
+					':isAdmin' => $instance->getIsAdmin(),
+					':isStudent' => $instance->getIsStudent(),
+					':isTA' => $instance->getIsTA(),
+					':isTutor' => $instance->getIsTutor(),
+					':firstName' => $instance->getFirstName(),
+					':lastName' => $instance->getLastName()
+				],
+				[
+					':email' => $instance->getEmail(),
+					':password' => $instance->password
+				]
+			));
+			if( $result ) {
+				$instance->setInDB(true);
+			}
+		}
+		catch( PDOException $e ) {}
 		
 		// Returns new user object
 		return $instance;

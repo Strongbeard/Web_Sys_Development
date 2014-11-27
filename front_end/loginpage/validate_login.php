@@ -57,19 +57,20 @@
 				$isTA = ($isTA === 'true') ? true : false;
 				$isTutor = ($isTutor === 'true') ? true : false;
 
-				$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName);
-
-				if ($user === null) { //check if error instantiating user (password too short)
-					echo 0;
+				// If user already in database
+				if( USER::fromDatabase($email) !== null ) {
+					echo 1;
 				}
 				else {
-					if ($user->store() === false) //check if user already exists in system
-						echo 1;
-					else {
+					$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName);
+					var_dump($user);
 
+					if ($user === null) { //check if error instantiating user (password too short)
+						echo 0;
+					}
+					else {
 						echo 2;
 					}
-
 				}
 			}
 		}
