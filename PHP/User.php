@@ -248,8 +248,8 @@ class User {
 	public function getStudentTAs() {
 		if( $this->isStudent && $this->inDB ) {
 			$db = DB::getInstance();
-			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse FROM users as u1 INNER JOIN students_courses AS sc ON u1.userid = sc.userid INNER JOIN tas_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.userId = u2.userId WHERE u1.userid = :userid', array(
-				':userid' => $this->email
+			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse FROM users as u1 INNER JOIN students_courses AS sc ON u1.email = sc.email INNER JOIN tas_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email WHERE u1.email = :email', array(
+				':email' => $this->email
 			));
 		}
 		return false;

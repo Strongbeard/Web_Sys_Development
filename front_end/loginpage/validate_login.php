@@ -18,7 +18,7 @@
 				$password = mysql_real_escape_string(stripslashes($_POST['pass']));
 
 				
-				$user = User::fromDatabase('email', $username);
+				$user = User::fromDatabase($username);
 				if ($user) {
 					if ($user->login($password)) {
 						echo 1;
