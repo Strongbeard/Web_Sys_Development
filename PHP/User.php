@@ -163,24 +163,37 @@ class User {
 		
 		$pstmt = 'INSERT INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName)';
 		if( $update ) {
-			$pstmt .= ' ON DUPLICATE KEY UPDATE email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName);';
-		}
-		$pstmt .= 'INSERT INTO passwords (userid,password) VALUES (:userid,:password)';
-		if( $update ) {
-			$pstmt = ' ON DUPLICATE KEY UPDATE password = VALUES(password)';
+			$pstmt .= ' ON DUPLICATE KEY UPDATE email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName)';
 		}
 		$pstmt .= ';';
+		$pstmt_array[] = $pstmt;
+		$pstmt = 'INSERT INTO passwords (email,password) VALUES (:email,:password)';
+		if( $update ) {
+			$pstmt .= ' ON DUPLICATE KEY UPDATE password = VALUES(password)';
+		}
+		$pstmt .= ';';
+		$pstmt_array[] = $pstmt;
 		
-		$results = $db->prep_execute( $pstmt, array(
-			':email' => $this->email,
-			':isStudent' => ($this->isStudent) ? 1 : 0,
-			':isTA' => ($this->isTA) ? 1 : 0,
-			':isTutor' => ($this->isTutor) ? 1 : 0,
-			':isAdmin' => ($this->isAdmin) ? 1 : 0,
-			':firstName' => $this->firstName,
-			':lastName' => $this->lastName,
-			':password' => $this->password
-		));
+		try{
+			$results = $db->multi_prep_execute( $pstmt_array, array(
+				[
+					':email' => $this->email,
+					':isStudent' => ($this->isStudent) ? 1 : 0,
+					':isTA' => ($this->isTA) ? 1 : 0,
+					':isTutor' => ($this->isTutor) ? 1 : 0,
+					':isAdmin' => ($this->isAdmin) ? 1 : 0,
+					':firstName' => $this->firstName,
+					':lastName' => $this->lastName
+				],
+				[
+					':email' => $this->email,
+					':password' => $this->password
+				]
+			));
+		}
+		catch( PDOException $e ) {
+			return false;
+		}
 		
 		/*// Insert user info into database (or update if update flag true)
 		$user_result = $db->prep_execute( $user_string . ';', array(
