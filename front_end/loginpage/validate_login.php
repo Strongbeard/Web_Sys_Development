@@ -66,6 +66,7 @@
 					if ($user->store() === false) //check if user already exists in system
 						echo 1;
 					else {
+
 						echo 2;
 					}
 
