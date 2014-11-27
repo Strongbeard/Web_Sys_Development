@@ -9,7 +9,6 @@ USE TA_Hunter;
 /* TABLE CREATION */
 DROP TABLE IF EXISTS users;
 CREATE TABLE users(
-	userId INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	email VARCHAR(255) NOT NULL,
 	firstName VARCHAR(255),
 	lastName VARCHAR(255),
@@ -17,8 +16,7 @@ CREATE TABLE users(
 	isTA BOOL NOT NULL,
 	isTutor BOOL NOT NULL,
 	isStudent BOOL NOT NULL,
-	PRIMARY KEY(userId),
-	UNIQUE(email)
+	PRIMARY KEY(email)
 );
 
 DROP TABLE IF EXISTS courses;
@@ -63,21 +61,21 @@ CREATE TABLE Students(
 
 DROP TABLE IF EXISTS Passwords;
 CREATE TABLE Passwords(
-	userId INT UNSIGNED NOT NULL,
+	email VARCHAR(255) NOT NULL,
 	password VARCHAR(255),
-	PRIMARY KEY(userId),
-	FOREIGN KEY(userId) REFERENCES Users(userId)
+	PRIMARY KEY(email),
+	FOREIGN KEY(email) REFERENCES Users(email)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS students_courses;
 CREATE TABLE students_courses(
-	userId INT UNSIGNED NOT NULL,
+	email VARCHAR(255) NOT NULL,
 	subj CHAR(4) NOT NULL,
 	crse MEDIUMINT(3) UNSIGNED NOT NULL,
-	PRIMARY KEY(userId, subj, crse),
-	FOREIGN KEY(userId) REFERENCES users(userId)
+	PRIMARY KEY(email, subj, crse),
+	FOREIGN KEY(email) REFERENCES users(email)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 	FOREIGN KEY(subj, crse) REFERENCES courses(subj, crse)
@@ -87,11 +85,11 @@ CREATE TABLE students_courses(
 
 DROP TABLE IF EXISTS TAs_courses;
 CREATE TABLE TAs_courses(
-	userId INT UNSIGNED NOT NULL,
+	email VARCHAR(255) NOT NULL,
 	subj CHAR(4) NOT NULL,
 	crse MEDIUMINT(3) UNSIGNED NOT NULL,
-	PRIMARY KEY(userId, subj, crse),
-	FOREIGN KEY(userId) REFERENCES users(userId)
+	PRIMARY KEY(email, subj, crse),
+	FOREIGN KEY(email) REFERENCES users(email)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 	FOREIGN KEY(subj, crse) REFERENCES courses(subj, crse)

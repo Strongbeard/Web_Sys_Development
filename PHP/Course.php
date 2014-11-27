@@ -86,11 +86,11 @@ class course{
 	}
 	
 	public function getTA_Code() {
-		return $ta_code;
+		return $this->ta_code;
 	}
 	
 	public function getInDB() {
-		return $inDB;
+		return $this->inDB;
 	}
 	
 	public function validate_ta_code( $code ) {
@@ -207,7 +207,9 @@ class course{
 		$db = DB::getInstance();
 	}
 	
+	
 	// ########################## STATIC DB FUNCTIONS ##########################
+	
 	public static function search($subj,$crse = -1,$name = '') {
 		// INVALID ARGUMENT ERRORS
 		if( !is_string($subj) || empty($subj) || strlen($subj) !== 4 ) {
@@ -247,6 +249,35 @@ class course{
 		}
 		return $allCourses;
 	}
+	
+	public static function deleteFromDB($subj, $crse) {
+		// INVALID ARGUMENT ERRORS
+		if( !is_string($subj) || empty($subj) || strlen($subj) !== 4 ) {
+			throw new InvalidArgumentException('COURSE::search(string $subj, int $crse, string $name) => $subj should be a non-empty 4-letter string.');
+		}
+		if( !is_int($crse) ) {
+			throw new InvalidArgumentException('COURSE::search(string $subj, int $crse, string $name) => $crse should be an integer.');
+		}
+		
+		$db = DB::getInstance();
+		try {
+			$result = $db->prep_execute('DELETE FROM courses WHERE subj = :subj AND crse = :crse;', array(
+				':subj' => $subj,
+				':crse' => $crse
+			));
+		}
+		catch( PDOException $e ) {
+			return false;
+		}
+		
+		if( $result ) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	// ########################### PRIVATE FUNCTIONS ###########################
 	
 	private static function generateRandomString($length = 50) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

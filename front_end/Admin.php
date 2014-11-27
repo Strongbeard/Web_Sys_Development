@@ -4,13 +4,45 @@ require(SITE_ROOT . '/PHP/User.php');
 require(SITE_ROOT . '/PHP/Course.php');
 require(SITE_ROOT . '/PHP/check_logged_in.php');
 
+$message = '';
+$message_class = 'hidden';
+
 if( isset($_POST['form']) ) {
 	switch ($_POST['form']) {
 		case 'AddCourse':
+			try{
+				if( COURSE::withValues($_POST['AddCourse_Subj'], intval($_POST['AddCourse_Crse']), $_POST['AddCourse_Name'])->getInDB() ) {
+					$message = 'Success!';
+					$message_class = 'success';
+				}
+				else {
+					$message = 'ERROR: could not add course to database.';
+					$message_class = 'error';
+				}
+			}
+			catch( Exception $e ) {
+				$message = $e->getMessage();
+				$message_class = 'error';
+			}
 			break;
 		case 'AddUser':
 			break;
 		case 'DeleteCourse':
+			list($subj, $crse) = split('-', $_POST['DeleteCourse_Course']);
+			try {
+				if( COURSE::deleteFromDB($subj, intval($crse)) ) {
+					$message = 'Success!';
+					$message_class = 'success';
+				}
+				else {
+					$message = 'ERROR: could not delete course from database.';
+					$message_class = 'error';
+				}
+			}
+			catch( Exception $e ) {
+				$message = $e->getMessage();
+				$message_class = 'error';
+			}
 			break;
 		case 'DeleteUser':
 			break;
@@ -23,7 +55,6 @@ if( isset($_POST['form']) ) {
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>TA Scheduler</title>
-	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/user.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/admin.css">
 	<div class="upperright"> 
@@ -40,6 +71,9 @@ if( isset($_POST['form']) ) {
 <body>
 	<div class="wrapper">
 		<?php include(SITE_ROOT . '/front_end/header.php') ?>
+		<section id="Message" class="<?php echo $message_class ?>">
+			<?php echo $message ?>
+		</section>
 		<section class="courses">
 			<form id="AddUser" action="#" method="POST">
 				<h2>Add A User</h2>
@@ -82,7 +116,7 @@ if( isset($_POST['form']) ) {
 				<h2>Delete A User</h2>
 				<input type="hidden" name="form" value="DeleteUser" />
 				<label for="DeleteUser_User">User</label>
-				<select id="DeleteUser_User" name="DeleteUser_User">
+				<select id="DeleteUser_User" name="DeleteUser_User" required>
 				<?php foreach(USER::getAllUsers() as $user) : ?>
 					<option value="<?php echo $user->getEmail(); ?>"><?php echo $user->getLastName() . ', ' . $user->getFirstName() . ' - ' . $user->getEmail(); ?></option>
 				<?php endforeach; ?>
@@ -94,11 +128,11 @@ if( isset($_POST['form']) ) {
 				<input type="hidden" name="form" value="AddCourse" />
 				<div class="input_block">
 					<label for="AddCourse_Subj">Subj</label>
-					<input id="AddCourse_Subj" type="text" name="AddCourse_Subj" />
+					<input id="AddCourse_Subj" type="text" name="AddCourse_Subj" required />
 				</div>
 				<div class="input_block">
 					<label for="AddCourse_Crse">Crse</label>
-					<input id="AddCourse_Crse" type="text" name="AddCourse_Crse" />
+					<input id="AddCourse_Crse" type="text" name="AddCourse_Crse" required />
 				</div>
 				<div class="input_block">
 					<label for="AddCourse_Name">Name</label>
@@ -106,11 +140,11 @@ if( isset($_POST['form']) ) {
 				</div>
 				<input class="input_block" type="submit" value="Add Course" />
 			</form>
-			<form>
+			<form id="DeleteCourse" action="#" method="POST">
 				<h2>Delete A Course</h2>
 				<input type="hidden" name="form" value="DeleteCourse" />
 				<label for="DeleteCourse_Course">Course</label>
-				<select id="DeleteCourse_Course">
+				<select id="DeleteCourse_Course" name="DeleteCourse_Course" required>
 				<?php foreach(COURSE::getAllCourses() as $course) : ?>
 					<option value="<?php echo $course->getSubj() . '-' . $course->getCrse(); ?>"><?php echo $course->getSubj() . ' ' . $course->getCrse() . ' - ' . $course->getName(); ?></option>
 				<?php endforeach; ?>
@@ -135,7 +169,5 @@ if( isset($_POST['form']) ) {
 			© 2014 TA Hunters
 		</footer>
 	</div><!-- .wrapper -->
-	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
 </body>
 </html>

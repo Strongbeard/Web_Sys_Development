@@ -1,6 +1,6 @@
 /*welcomepage.html, welcomepage_for_TA.html, 
 _profile.html, search_add.html CSS*/
-header, section, footer, aside, nav, article, figure, figcaption {
+header, nav {
 	display: block;
 }
 header {
