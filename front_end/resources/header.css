@@ -1,61 +1,36 @@
 /*welcomepage.html, welcomepage_for_TA.html, 
 _profile.html, search_add.html CSS*/
 header, section, footer, aside, nav, article, figure, figcaption {
-	display: block;}
-body {
-	color: #666666;
-	background-color: #f9f8f6;
-	background-image: url("images/BG.jpg");
-	background-position: center;
-	font-family: Georgia, Times, serif;
-	line-height: 1.4em;
-	margin: 0px;}
-.wrapper {
-	width: 940px;
-	margin: 20px auto 20px auto;
-	border: 2px solid #000000;
-	background-color: #ffffff;}
+	display: block;
+}
 header {
 	height: 160px;
 }
-nav{
+header nav{
 	clear: both;
 	color: #ffffff;
 	background-color: #aeaca8;
-	height: 30px;}
-nav ul {
-	margin: 0px;
-	padding: 5px 0px 5px 30px;}
-nav li {
-	display: inline;
-	margin-right: 40px;}
-nav li a {
-	color: #ffffff;}
-
-a {
-	color: #de6581;
-	text-decoration: none;}
-h1 {
-	font-weight: normal;}
-
-.upperright {
-	position: absolute; 
-	top: 100; 
-	right: 60; 
-	width: 1180px; 
-	text-align:right;"
-
+	height: 30px;
 }
-nav li a:hover, nav li a.current {
-	color: #000000;}
-		
+header nav ul {
+	margin: 0px;
+	padding: 5px 0px 5px 30px;
+}
+header nav li {
+	display: inline;
+	margin-right: 40px;
+}
+header nav li a {
+	color: #ffffff;
+}
+header a {
+	color: #de6581;
+	text-decoration: none;
+}
+header h1 {
+	font-weight: normal;
+}
 
-
-
-
-
-
-
-
-
-
+header nav li a:hover, nav li a.current {
+	color: #000000;
+}

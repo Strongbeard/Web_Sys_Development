@@ -3,10 +3,12 @@ USE TA_Hunter;
 /* USERS */
 INSERT IGNORE INTO users (userid, email, isAdmin, isStudent, isTA, isTutor, firstName, lastName) VALUES (1,'mahonk3@rpi.edu',FALSE,TRUE,FALSE,FALSE,'Kevin','Mahon'); /* password = mahonk3 */
 INSERT IGNORE INTO users (userid, email, isAdmin, isStudent, isTA, isTutor, firstName, lastName) VALUES (2,'ta@test.com',FALSE,FALSE,TRUE,FALSE,'TA_First','TA_Last'); /* password = testtesttest */
+INSERT IGNORE INTO users (userid, email, isAdmin, isStudent, isTA, isTutor, firstName, lastName) VALUES (3,'allflags@test.com',TRUE,TRUE,TRUE,TRUE,'ALLFLAGS_FIRST','ALLFLAGS_LAST'); /* password = allflags */
 
 /* PASSWORDS */
 INSERT IGNORE INTO passwords(userid, password) VALUES (1,'$2y$10$KN0.2dx2J7ZCj1aPqhruwuZ7YR0soWcv/rWX7FuURB2U9EC5wUe2u');
 INSERT IGNORE INTO passwords(userid, password) VALUES (2,'$2y$10$upW9J0/LbrG07GQYFWVYfuObnwX5TlRWHFx0YHgTpQqhNBI3bRmvK');
+INSERT IGNORE INTO passwords(userid, password) VALUES (3,'$2y$10$Bh3U8nyONCB28zcs8hHqL.YHQ65yhvk.h3MTpi/3PzYp6vSXndIYG');
 
 /* COURSES */
 INSERT IGNORE INTO courses(name, subj, crse, ta_code) VALUES ( 'BASIC DRAWING', 'ARTS', 1200, '30aggahfngg4ccmp8engi3v3l75zs9m4x5m0ntfe5ouppd6cny' );

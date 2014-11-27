@@ -238,6 +238,16 @@ class course{
 		return $db->prep_execute($pstmt, $pstmt_array);
 	}
 	
+	public static function getAllCourses() {
+		$allCourses = array();
+		$db = DB::getInstance();
+		$course_rows = $db->prep_execute('SELECT subj, crse FROM courses ORDER BY subj, crse, name;', array());
+		foreach( $course_rows as $row ) {
+			$allCourses[] = COURSE::fromDatabase($row['subj'], intval($row['crse']));
+		}
+		return $allCourses;
+	}
+	
 	private static function generateRandomString($length = 50) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$randomString = '';
