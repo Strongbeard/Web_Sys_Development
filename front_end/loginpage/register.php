@@ -1,5 +1,25 @@
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once(SITE_ROOT . '../PHP/User.php');
+require_once(SITE_ROOT . '../PHP/Course.php');
+
+session_start();
+if( isset($_SESSION) && isset($_SESSION['user']) ) {	
+	$t = $_SESSION['user']->getIsAdmin();
+	if ($t == true) {
+		header( 'Location: ' . SITE_URL . '/front_end/Admin.php' ) ;
+	}
+
+	$t = $_SESSION['user']->getIsTA();
+	if ($t == true) {
+		header( 'Location: ' . SITE_URL . '/front_end/TA.php' ) ;
+	}
+
+	$t = $_SESSION['user']->getIsStudent();
+	if ($t == true) {
+		header( 'Location: ' . SITE_URL . '/front_end/student.php') ;
+	}
+}
 ?>
 <!DOCTYPE html>
 <html>
