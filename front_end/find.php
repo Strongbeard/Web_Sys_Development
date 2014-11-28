@@ -39,8 +39,39 @@ if (isset($_GET['ta_name']) && !empty($_GET['ta_name'])) {
 	catch (Exception $e) {
 		echo "Error: " . $e->getMessage();
 	}
-
 }
 
+if (isset($_GET['class_name']) && !empty($_GET['class_name'])) {
+	try {
+		$dbconn = DB::getInstance();
+		$class_name = mysql_real_escape_string(stripslashes($_GET['class_name']));
+		$school_name = mysql_real_escape_string(stripslashes($_GET['school_name']));
+
+
+//SELECT courses.subj, courses.crse, name, firstName, lastName, users.email FROM tas_courses, courses, users WHERE tas_courses.subj = courses.subj AND tas_courses.crse = courses.crse AND tas_courses.email = users.email
+
+		$result = null;
+		//school not selected
+		
+		$search_arr = array(':class_name' => $class_name);
+		$result = $dbconn->prep_execute("SELECT courses.subj, courses.crse, name, firstName, lastName, users.email FROM tas_courses, courses, users WHERE courses.name = :class_name AND tas_courses.subj = courses.subj AND tas_courses.crse = courses.crse AND tas_courses.email = users.email", $search_arr);
+			
+	
+		if ($result != null && sizeof($result) > 0) {
+			$all = '';
+			foreach ($result as $row) {
+        		$all .= ('<tr><td>' . $row['subj'] . '</td><td>' . $row['crse'] . '</td><td>' . $row['name'] . '</td><td>' . $row['firstName'] . ' ' . $row['lastName'] .  '</td><td>' . $row['email'] . '</td></tr>');
+        	}
+        	echo $all;
+		}
+		else {
+			echo '';
+		}
+    }
+
+	catch (Exception $e) {
+		echo "Error: " . $e->getMessage();
+	}
+}
 
 ?>

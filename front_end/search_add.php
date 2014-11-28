@@ -66,13 +66,14 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 								<input type="submit" value="Search"/>
 							</form>
 							<hr>						
-							<form id="search_class_form">
+							<form id="search_class_form" method="GET">
 								<p>Search by Class:</p>
 								<input type="search" id="search_class" name="search_class" placeholder="Enter name of class"/>
 								<input type="submit" value="Search"/>
 							
 								<p>Select a school:</p>
 								<select name="search_school" id="search_school">
+									<option disabled selected>School</option>
 									<option>Architecture</option>
 									<option>Business</option>
 									<option>Engineering</option>
@@ -120,8 +121,6 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				$('#results > span').empty();
 				$('#results > table').empty();
 				var ta_name = $('#search_ta').val();
-				//var search_class = $('#search_class').val();
-				//var search_school = $("#search_school option:selected" ).val();
 
 				$('input').removeClass('error');
 
@@ -140,6 +139,72 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                   	//console.log(data);
 		                   	if (data.length > 0) {
 		                   		$('#results > table').append("<thead><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Subject</th><th>Course</th><th>Name</th></tr></thead>");
+		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
+		                   	}
+		                   	else {
+		                   		$('#results > span').html("No results");
+		                   	}
+		          
+		                 
+
+		                },
+		                error: function () {
+		                    console.log("error");
+		                }
+		            });
+				}	
+			});
+
+
+			$('#search_class_form').submit(function (event) {
+				event.preventDefault();
+				$('#results > span').empty();
+				$('#results > table').empty();
+				var class_name = $('#search_class').val();
+				var school_name = $("#search_school option:selected" ).val();
+				//console.log(school_name);
+				$('input').removeClass('error');
+
+				if (!class_name) {
+					$('#search_class').addClass('error');
+				}
+				else {
+					//ignore if user doesn't select school - defaults to first option
+					if (school_name === 'school') {
+						
+					}
+					else {
+						switch(school_name) {
+							case 'Architecture':
+								school_name = '';
+								break;
+							case 'Business':
+								school_name = '';
+								break;
+							case 'Engineering':
+								school_name = '';
+								break;
+							case 'HASS':
+								school_name = '';
+								break;
+							case 'ITWS':
+								school_name = '';
+								break;
+							case 'Science':
+								school_name = '';
+								break;
+						}
+					}
+					$.ajax({
+		                url: "./find.php",
+		                data: {'class_name': class_name, 'school_name': school_name},
+		                method: 'GET',
+		                success: function (data) {
+		                    data = $.trim(data);
+		                   	console.log("data: " + data.length);
+		                   	console.log(data);
+		                   	if (data.length > 0) {
+		                   		$('#results > table').append("<thead><tr><th>Subject</th><th>Course #</th><th>Name</th><th>TA Name</th><th>TA Email</th></tr></thead>");
 		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
 		                   	}
 		                   	else {
