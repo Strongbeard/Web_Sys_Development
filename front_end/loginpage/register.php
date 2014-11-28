@@ -178,8 +178,15 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 
 		                    */
 							if (data === "2") { 
-		                    	console.log("login successful")
-		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/student.php';
+		                    	console.log("login successful");
+		           
+								if (isTA) {
+									 document.location.href = '<?php echo SITE_URL; ?>/front_end/TA.php';
+								}
+								if (isStudent) {
+									 document.location.href = '<?php echo SITE_URL; ?>/front_end/student.php';
+								}
+		                        
 		                    }
 		                    if (data === "1") { 
 		                         $('#login_error').html("email already exists in system or not an rpi.edu email");

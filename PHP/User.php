@@ -71,7 +71,7 @@ class User {
 
 		// Sets password. Returns null on error
 		try {
-			!$instance->setPassword($password); 
+			$instance->setPassword($password); 
 		}
 		catch (InvalidArgumentException $e) {
 			return null;
