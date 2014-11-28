@@ -148,19 +148,6 @@ class User {
 	public function store($update = False) {
 		$db = DB::getInstance();
 		
-		// Craft prepared statement strings to replace or not replace user info
-		// if the user already exists in the database
-		/*$user_string = '';
-		$password_string = '';
-		if( !$update ) {
-			$user_string = 'INSERT IGNORE INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName);';
-			$password_string = 'INSERT IGNORE INTO passwords (userid,password) VALUES (:userid,:password);';
-		}
-		else{
-			$user_string .= 'INSERT INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName) ON DUPLICATE KEY UPDATE email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName)';
-			$password_string .= 'INSERT INTO passwords (userid,password) VALUES (:userid,:password) ON DUPLICATE KEY UPDATE password = VALUES(password)';
-		}*/
-		
 		$pstmt = 'INSERT INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName)';
 		if( $update ) {
 			$pstmt .= ' ON DUPLICATE KEY UPDATE email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName)';
@@ -195,34 +182,6 @@ class User {
 			return false;
 		}
 		
-		/*// Insert user info into database (or update if update flag true)
-		$user_result = $db->prep_execute( $user_string . ';', array(
-			':email' => $this->email,
-			':isStudent' => ($this->isStudent) ? 1 : 0,
-			':isTA' => ($this->isTA) ? 1 : 0,
-			':isTutor' => ($this->isTutor) ? 1 : 0,
-			':isAdmin' => ($this->isAdmin) ? 1 : 0,
-			':firstName' => $this->firstName,
-			':lastName' => $this->lastName
-		));
-		
-		// Get userId from database to use in password table
-		$password_result = 0;
-		if( $this->updateUID() ) {
-			$password_result = $db->prep_execute($password_string . ';',array(
-				':userid' => $this->uid,
-				':password' => $this->password
-			));
-		}
-		else {
-			return false;
-		}
-		
-		// Return true if something was altered or inserted.
-		if( $user_result || $password_result ) {
-			return true;
-		}*/
-		
 		return $results;
 	}
 	
@@ -231,6 +190,10 @@ class User {
 	// Return email
 	public function getEmail() {
 		return $this->email;
+	}
+	
+	public function getInDB() {
+		return $this->inDB;
 	}
 	
 	// Return admin flag
@@ -589,8 +552,8 @@ class User {
 		
 		// Removed the user row with unique column from database
 		$db = DB::getInstance();
-		$result = $db->prep_execute('DELETE FROM users WHERE ' . $unique_column . ' = :value;', array(
-			':value' => $value
+		$result = $db->prep_execute('DELETE FROM users WHERE email = :email;', array(
+			':email' => $email
 		));
 		
 		// Return true if a user was deleted. Otherwise, return false.
