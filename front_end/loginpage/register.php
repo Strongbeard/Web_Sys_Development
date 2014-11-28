@@ -104,7 +104,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 				var isTA = $('#isTA').is(':checked');
 				var isStudent = $('#isStudent').is(':checked');
 				var isTutor = $('#isTutor').is(':checked');
-				console.log ('checkboxes ' + isStudent + isTA + isTutor);
+				//console.log ('checkboxes ' + isStudent + isTA + isTutor);
 
 				$('input').removeClass('error');
 				$('#login_error').empty();
@@ -179,7 +179,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 		                    */
 							if (data === "2") { 
 		                    	console.log("login successful")
-		                        document.location.href = '../student.php';
+		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/student.php';
 		                    }
 		                    if (data === "1") { 
 		                         $('#login_error').html("email already exists in system or not an rpi.edu email");

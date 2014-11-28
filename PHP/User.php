@@ -70,7 +70,10 @@ class User {
 		$instance = new self($email, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
 
 		// Sets password. Returns null on error
-		if( !$instance->setPassword($password) ) {
+		try {
+			!$instance->setPassword($password); 
+		}
+		catch (InvalidArgumentException $e) {
 			return null;
 		}
 		

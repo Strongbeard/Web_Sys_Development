@@ -23,7 +23,7 @@ if (isset($_GET['ta_name']) && !empty($_GET['ta_name'])) {
 			$result = $dbconn->prep_execute("SELECT firstName, lastName, users.email, courses.subj AS subj, courses.crse AS crse, name FROM users, tas_courses, courses WHERE isTA = 1 AND (firstName LIKE CONCAT('%', :firstName,'%') OR lastName LIKE CONCAT('%', :lastName,'%')) AND users.email = tas_courses.email AND tas_courses.crse = courses.crse AND tas_courses.subj = courses.subj", $search_arr);
 	
 		}
-		//SELECT firstName, lastName, email, courses.subj, courses.crse, name FROM users, tas_courses, courses WHERE isTA = 1 and users.userId = tas_courses.userID and tas_courses.crse = courses.crse and tas_courses.subj = courses.subj 
+
 		if ($result != null && sizeof($result) > 0) {
 			$all = '';
 			foreach ($result as $row) {
@@ -46,9 +46,6 @@ if (isset($_GET['class_name']) && !empty($_GET['class_name'])) {
 		$dbconn = DB::getInstance();
 		$class_name = mysql_real_escape_string(stripslashes($_GET['class_name']));
 		$school_name = mysql_real_escape_string(stripslashes($_GET['school_name']));
-
-
-//SELECT courses.subj, courses.crse, name, firstName, lastName, users.email FROM tas_courses, courses, users WHERE tas_courses.subj = courses.subj AND tas_courses.crse = courses.crse AND tas_courses.email = users.email
 
 		$result = null;
 		//school not selected

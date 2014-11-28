@@ -57,18 +57,20 @@
 				$isTA = ($isTA === 'true') ? true : false;
 				$isTutor = ($isTutor === 'true') ? true : false;
 
-				// If user already in database
+				// If user in database
 				if( USER::fromDatabase($email) !== null ) {
-					echo 1;
+					echo 1;			
 				}
 				else {
 					$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName);
-					var_dump($user);
+					//var_dump($user);
 
 					if ($user === null) { //check if error instantiating user (password too short)
 						echo 0;
 					}
 					else {
+						$user->store();
+						$user->login($password);
 						echo 2;
 					}
 				}
