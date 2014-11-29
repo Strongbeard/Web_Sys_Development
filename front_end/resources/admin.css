@@ -1,0 +1,26 @@
+form {
+    display: block;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 0.35em;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    border: 2px groove rgb(192,192,192);
+}
+
+.input_block {
+	display: block;
+}
+
+.input_inline {
+	display: inline-block;
+}
+
+#Message .error{
+	background-color: red;
+}
+
+#Message .hidden{
+	display: none;
+}
