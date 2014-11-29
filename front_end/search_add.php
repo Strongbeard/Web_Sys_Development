@@ -12,13 +12,6 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>TA Scheduler</title>
 		<link rel="stylesheet" type="text/css" href="./resources/user.css">
-		<div class="upperright"> 
-			<?php	$firstname = $_SESSION['user']->getFirstName();
-						$lastname = $_SESSION['user']->getLastName();
-						echo "Welcome " . $firstname . " " . $lastname . " ";	
-			?> 
-			<a href="logout.php">Logout</a>
-		</div>
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -26,6 +19,13 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 	<body>
 		<div class="wrapper">
 			<header>
+				<div class="upperright"> 
+					<?php	$firstname = $_SESSION['user']->getFirstName();
+						$lastname = $_SESSION['user']->getLastName();
+						echo "Welcome " . $firstname . " " . $lastname . " ";	
+					?> 
+					<a href="logout.php">Logout</a>
+				</div>
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>

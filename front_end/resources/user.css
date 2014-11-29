@@ -82,11 +82,11 @@ footer {
 	font-size: 80%;
 	padding: 7px 0px 0px 20px;}
 .upperright {
-	position: absolute; 
+	position: relative;
+	left: 725px;
 	top: 100; 
 	right: 60; 
-	width: 1180px; 
-	text-align:right;"
+	width: 1180px;
 
 }
 #results {
