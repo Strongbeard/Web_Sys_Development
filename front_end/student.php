@@ -81,9 +81,14 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<section class="popular-recipes">
 					<?php
 						$t = $_SESSION['user']->getIsTA();
-
-						if ($t == true) {
+						$s = $_SESSION['user']->getIsStudent();
+						if ($t == false && $s == true ) {
 								echo "<h2>Are You a TA?</h2>";
+								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
+						    echo "<input type='submit' value='Submit'>";
+						}
+						else if ($t == true && $s == true ) {
+								echo "<h2>Are You a TA for another class?</h2>";
 								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
 						    echo "<input type='submit' value='Submit'>";
 						}
