@@ -33,13 +33,15 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 								echo "<li><a href='Admin.php'>Admin</a><li>";
 						}
 						?>
+						
 						<?php
-						$t = $_SESSION['user']->getIsTA();
+						$t = $_SESSION['user']->getIsStudent();
 
 						if ($t == true) {
 								echo "<li><a href='student.php'>Student</a><li>";
 						}
 						?>
+						
 						<?php
 						$t = $_SESSION['user']->getIsTA();
 

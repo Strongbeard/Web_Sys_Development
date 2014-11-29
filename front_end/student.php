@@ -28,27 +28,30 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
 				<nav>
 					<ul>
-					  <?php
-						$t = $_SESSION['user']->getIsAdmin();
+						<?php
+							$t = $_SESSION['user']->getIsAdmin();
 
-						if ($t == true) {
+							if ($t == true) {
 								echo "<li><a href='Admin.php'>Admin</a><li>";
-						}
+							}
 						?>
+						
 						<?php
-						$t = $_SESSION['user']->getIsTA();
+							$t = $_SESSION['user']->getIsStudent();
 
-						if ($t == true) {
+							if ($t == true) {
 								echo "<li><a href='student.php' class='current'>Student</a><li>";
-						}
+							}
 						?>
+						
 						<?php
-						$t = $_SESSION['user']->getIsTA();
+							$t = $_SESSION['user']->getIsTA();
 
-						if ($t == true) {
+							if ($t == true) {
 								echo "<li><a href='TA.php'> TA</a><li>";
-						}
+							}
 						?>
+						
 						<li><a href="search_add.php">Search/Add</a></li>
 						<li><a href="_profile.php">Profile</a></li>
 					</ul>
