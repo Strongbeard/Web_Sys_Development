@@ -246,6 +246,23 @@ class User {
 		return $courses;
 	}
 	
+	// Return an array with database course rows that the student is enrolled in
+	public function getTACourses() {
+		require_once(SITE_ROOT . '\PHP\Course.php');
+		$courses = array();
+		if( $this->isTA && $this->inDB ) {
+			$db = DB::getInstance();
+			$result = $db->prep_execute('SELECT subj, crse FROM tas_courses WHERE email = :email', array(
+				':email' => $this->email
+			));
+			
+			foreach($result as $row) {
+				$courses[] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
+			}
+		}
+		return $courses;
+	}
+	
 	// Return an array with database TAs that are mapped to student's courses
 	public function getStudentTAs() {
 		if( $this->isStudent && $this->inDB ) {
@@ -272,7 +289,7 @@ class User {
 		else { // $rel is 'student' or 'ta'
 			$rel = strtolower($rel);
 			if( $rel !== 'student' && $rel !== 'ta' ) {
-				throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+				throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student" or "ta"');
 			}
 		}
 		// $subj is a string
@@ -545,7 +562,6 @@ class User {
 		return $allTAs;
 	}
 	
-		
 	// Removes user with unique id from database
 	public static function deleteFromDB($email) {
 		// Argument Validation
