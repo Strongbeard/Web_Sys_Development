@@ -1,6 +1,9 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.php');
 require(SITE_ROOT . '/php/check_logged_in.php');
+require(SITE_ROOT . '/PHP/Course.php');
+
+$courses = COURSE::getAllCourses();
 ?>
 <!DOCTYPE html>
 <html><head>
@@ -57,13 +60,44 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 						$var = $_SESSION['user']->getFirstName();
 						echo "<p> " . $var . " welcome to your portal page! </p>" . "<br>";	
 					 ?>
-					 <p> The calendar will come here? </p>
-					 <p> What else? </p>
-						
+					
+						<form id="AddCourse" action="#" method="POST">
+							<div class="input_block">
+								<label for="AddTAOfficeHours_Course">Course</label>
+								<select id="AddTAOfficeHours_Course" name="course" required>
+									<?php foreach($courses as $course) : ?>
+									<option value="<?php echo $course->getSubj() . '-' . $course->getCrse(); ?>"><?php echo $course->getSubj() . ' ' . $course->getCrse() . ' - ' . $course->getName(); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="input_block">
+								<label for="AddTAOfficeHours_WeekDay">Day </label>
+								<select id="AddTAOfficeHours_WeekDay" name="week_day">
+									<option value="SUNDAY">SUNDAY</option>
+									<option value="MONDAY">MONDAY</option>
+									<option value="TUESDAY">TUESDAY</option>
+									<option value="WEDNESDAY">WEDNESDAY</option>
+									<option value="THURSDAY">THURSDAY</option>
+									<option value="FRIDAY">FRIDAY</option>
+									<option value="SATURDAY">SATURDAY</option>
+								</select>
+							</div>
+							<div class="input_block">
+								<label for="AddTAOfficeHours_StartTime">Start Time</label>
+								<input id="AddTAOfficeHours_StartTime" type="time" name="startTime" />
+							</div>
+							<div class="input_block">
+								<label for="AddTAOfficeHours_EndTime">End Time</label>
+								<input id="AddTAOfficeHours_EndTime" type="time" name="endTime" />
+							</div>
+							<br>
+							<input class="input_block" type="submit" value="Add TA Office Hours" />
+						</form>
 					</figure>
 				
 				
 			</section>
+			<!--
 			<aside>
 				<section class="popular-recipes">
 					<?php
@@ -76,7 +110,8 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 						}
 					?>
 				</section>
-			</aside>
+			</aside> -->
+			
 			<footer>
 				© 2014 TA Hunters
 			</footer>
