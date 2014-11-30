@@ -17,46 +17,14 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 	</head>
 	<body>
 		<div class="wrapper">
-			<header>
-				<div class="upperright"> 
-					<?php	$firstname = $_SESSION['user']->getFirstName();
+			<?php	$firstname = $_SESSION['user']->getFirstName();
 						$lastname = $_SESSION['user']->getLastName();
-						echo "Welcome " . $firstname . " " . $lastname . " ";	
-					?> 
-					<a href="logout.php">Logout</a>
-				</div>
-				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
-				<nav>
-					<ul>
-						<?php
-							$t = $_SESSION['user']->getIsAdmin();
-
-							if ($t == true) {
-								echo "<li><a href='Admin.php'>Admin</a><li>";
-							}
-						?>
-						
-						<?php
-							$t = $_SESSION['user']->getIsStudent();
-
-							if ($t == true) {
-								echo "<li><a href='student.php' class='current'>Student</a><li>";
-							}
-						?>
-						
-						<?php
-							$t = $_SESSION['user']->getIsTA();
-
-							if ($t == true) {
-								echo "<li><a href='TA.php'> TA</a><li>";
-							}
-						?>
-						
-						<li><a href="search_add.php">Search/Add</a></li>
-						<li><a href="_profile.php">Profile</a></li>
-					</ul>
-				</nav>
-			</header>
+						echo "<div id= 'namesize' align='right'> Welcome " . $firstname . " " . $lastname . " </div>";	
+					?>
+		<div id="upperright"> 
+			<a href="logout.php">Logout</a>
+		</div>
+		<?php include(SITE_ROOT . '/front_end/header.php') ?>
 			
 			<section class="courses">
 				<figure>
@@ -81,21 +49,27 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			</section>
 			
 			<aside>
-				<section class="popular-recipes">
+				<!--checks if you are a student and asks you if you ha a TA_CODE-->
+				<section>
 					<?php
 						$t = $_SESSION['user']->getIsTA();
 						$s = $_SESSION['user']->getIsStudent();
 						if ($t == false && $s == true ) {
 								echo "<h2>Are You a TA?</h2>";
-								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
+								echo "<input type='text' name='firstname' placeholder='Enter your ta_code'>";
 						    echo "<input type='submit' value='Submit'>";
 						}
 						else if ($t == true && $s == true ) {
 								echo "<h2>Are You a TA for another class?</h2>";
-								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
+								echo "<input type='text' name='firstname' placeholder='Enter your ta_code'>";
 						    echo "<input type='submit' value='Submit'>";
 						}
 					?>
+				</section>
+				<!--link to ALAC website-->
+				<section >
+					<h2>ALAC Hours</h2>
+					<a href="http://alac.rpi.edu/update.do?artcenterkey=4">alac.rpi.edu</a>
 				</section>
 			</aside>
 			

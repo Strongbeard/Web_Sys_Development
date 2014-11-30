@@ -1,4 +1,4 @@
-/*welcomepage.html, welcomepage_for_TA.html, 
+/*student.html, TA.html, admin.php 
 _profile.html, search_add.html CSS*/
 header, section, footer, aside, nav, article, figure, figcaption {
 	display: block;}
@@ -81,13 +81,13 @@ aside h2 {
 footer {
 	font-size: 80%;
 	padding: 7px 0px 0px 20px;}
-.upperright {
+#upperright {
 	position: relative;
-	left: 725px;
-	top: 100; 
-	right: 60; 
-	width: 1180px;
-
+	left: 890px;
+	font-size: 15px;
+}
+#namesize {
+	font-size: 15px;
 }
 #results {
 	float: none;

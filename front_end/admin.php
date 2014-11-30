@@ -199,19 +199,20 @@ if( isset($_POST['form']) ) {
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front+end/resources/better-timeinput-polyfill.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/user.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/admin.css">
-	<div class="upperright"> 
-		<?php	$firstname = $_SESSION['user']->getFirstName();
-					$lastname = $_SESSION['user']->getLastName();
-					echo "Welcome " . $firstname . " " . $lastname . " ";	
-		?> 
-		<a href="logout.php">Logout</a>
-	</div>
+	
 	<!--[if lt IE 9]>
 	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 </head>
 <body>
 	<div class="wrapper">
+		<?php	$firstname = $_SESSION['user']->getFirstName();
+						$lastname = $_SESSION['user']->getLastName();
+						echo "<div id= 'namesize' align='right'> Welcome " . $firstname . " " . $lastname . " </div>";	
+					?>
+		<div id="upperright"> 
+			<a href="logout.php">Logout</a>
+		</div>
 		<?php include(SITE_ROOT . '/front_end/header.php') ?>
 		<section id="Message" class="<?php echo $message_class ?>">
 			<?php echo $message ?>
