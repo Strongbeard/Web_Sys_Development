@@ -21,7 +21,19 @@
 				$user = User::fromDatabase($username);
 				if ($user) {
 					if ($user->login($password)) {
-						echo 1;
+						//echo 1;
+						if( $user->getIsAdmin() ) {
+							echo 'admin.php';
+						}
+						elseif( $user->getIsStudent() ) {
+							echo 'student.php';
+						}
+						elseif( $user->getIsTA() ) {
+							echo 'TA.php';
+						}
+						else {
+							echo '_profile.php';
+						}
 					}
 					else {
 						echo 0;

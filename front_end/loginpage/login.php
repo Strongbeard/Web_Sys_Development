@@ -109,14 +109,15 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 		                      1 is success
 		                      0 is login error
 		                    */
-		                    if (data === "1") { 
-		                    	console.log("login successful")
-		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/student.php';
-		                    }
+		                    
 		                    if (data === "0") {
 		                    	console.log("can't log in");
 		                        $('#login_error').html("User name and/or password invalid");
 		                    }
+							else { 
+		                    	console.log("login successful")
+		                        document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
+							}
 
 		                },
 		                error: function () {
