@@ -351,6 +351,92 @@ class User {
 		return false;
 	}
 	
+	public function addTAOfficeHours( $subj, $crse, $week_day, $start_time, $end_time ) {
+		if( !is_string($subj) || strlen($subj) !== 4 ) {
+			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
+		}
+		if( !is_int($crse) ) {
+			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
+		}
+		if( !is_string($week_day) ) {
+			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
+		}
+		$week_day = strtoupper($week_day);
+		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
+			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
+		}
+		if( !is_string( $start_time ) || !preg_match('/\d{1,2}:\d{2}/', $start_time) ) {
+			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $start_time should be a string of the format "HH:MM".');
+		}
+		if( !is_string( $end_time ) || !preg_match('/\d{1,2}:\d{2}/', $end_time) || $end_time <= $start_time ) {
+			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $end_time should be a string of the format "HH:MM" and be later in the day then $start_time.');
+		}
+	
+		if( !$this->isTA ) {
+			return false;
+		}
+		
+		$db = DB::getInstance();
+		try {
+			$result = $db->prep_execute('INSERT INTO ta_hours (email, subj, crse, week_day, start_time, end_time) VALUES (:email, :subj, :crse, :week_day, :start_time, :end_time);', array(
+				':email' => $this->email,
+				':subj' => $subj,
+				':crse' => $crse,
+				':week_day' => $week_day,
+				':start_time' => $start_time,
+				':end_time' => $end_time
+			));
+		}
+		catch( PDOException $e ) {
+			return false;
+		}
+		
+		if( $result ) {
+			return true;
+		}
+		return false;
+	}
+	
+	public function removeTAOfficeHours( $subj, $crse, $week_day ) {
+		// --- ARGUMENT ERROR HANDLING ---
+		if( !is_string($subj) || strlen($subj) !== 4 ) {
+			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
+		}
+		if( !is_int($crse) ) {
+			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
+		}
+		if( !is_string($week_day) ) {
+			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
+		}
+		// Sets $week_day to all uppercase characters after checking if string
+		$week_day = strtoupper($week_day);
+		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
+			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
+		}
+	
+		if( !$this->isTA ) {
+			return false;
+		}
+		
+		$db = DB::getInstance();
+		try {
+			$result = $db->prep_execute('DELETE FROM ta_hours WHERE email = :email AND subj = :subj AND crse = :crse AND week_day = :week_day;', array(
+				':email' => $this->email,
+				':subj' => $subj,
+				':crse' => $crse,
+				':week_day' => $week_day
+			));
+		}
+		catch( PDOException $e ) {
+			return false;
+		}
+		
+		if( $result ) {
+			return true;
+		}
+		return false;
+	}
+	
 	// Removes mapping in the database table students_courses or tas_courses
 	// depending on $rel's value.
 	public function removeUserCourse( $rel, $subj, $crse ) {
@@ -358,21 +444,21 @@ class User {
 		
 		// $rel is a string
 		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+			throw new InvalidArgumentException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
 		}
 		else { // $rel is either 'student' or 'ta'
 			$rel = strtolower($rel);
 			if( $rel !== 'student' && $rel !== 'ta' ) {
-				throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+				throw new DomainException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
 			}
 		}
 		// $subj is a string
-		if( !is_string($subj) ) {
-			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
+		if( !is_string($subj) || strlen($subj) !== 4 ) {
+			throw new InvalidArgumentException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $subj should be a 4 character string.');
 		}
 		// $crse is an int
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::remoteStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
 
 		// If user is in database, remove user-course mapping to database

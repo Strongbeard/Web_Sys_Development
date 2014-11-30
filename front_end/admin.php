@@ -65,6 +65,24 @@ if( isset($_POST['form']) ) {
 				$message_class = 'error';
 			}
 			break;
+		case 'AddTAOfficeHours':
+			try {
+				$user = USER::fromDatabase($_POST['email']);
+				list($subj, $crse) = split('-', $_POST['course']);
+				if( $user->addTAOfficeHours($subj, intval($crse), $_POST['week_day'], $_POST['startTime'], $_POST['endTime']) ) {
+					$message = 'Success!';
+					$message_class = 'success';
+				}
+				else {
+					$message = 'ERROR: could not add TA office hours to database.';
+					$message_class = 'error';
+				}
+			}
+			catch( Exception $e ) {
+				$message = $e->getMessage();
+				$message_class = 'error';
+			}
+			break;
 		case 'AddUser':
 			try {
 				$admin = ($_POST['admin'] === 'on') ? true : false;
@@ -128,6 +146,23 @@ if( isset($_POST['form']) ) {
 				}
 				else {
 					$message = 'ERROR: could not delete ta - course relationship from database.';
+					$message_class = 'error';
+				}
+			}
+			catch( Exception $e ) {
+				$message = $e->getMessage();
+				$message_class = 'error';
+			}
+			break;
+		case 'DeleteTAOfficeHours':
+			list( $subj, $crse, $email, $week_day ) = split( ' ', $_POST['ta_hours'] );
+			try {
+				if( USER::fromDatabase($email)->removeTAOfficeHours( $subj, intval($crse), $week_day ) ) {
+					$message = 'Success!';
+					$message_class = 'success';
+				}
+				else {
+					$message = 'ERROR: could not delete TA office hours from database.';
 					$message_class = 'error';
 				}
 			}
@@ -324,6 +359,60 @@ if( isset($_POST['form']) ) {
 					</select>
 				</div>
 				<input class="input_block" type="submit" value="Delete TA Course Relationship" />
+			</form>
+			<form id="AddTAOfficeHours" action="#" method="POST">
+				<h2>Give a TA Office Hours</h2>
+				<input type="hidden" name="form" value="AddTAOfficeHours" />
+				<div class="input_block">
+					<label for="AddTAOfficeHours_TA">TA</label>
+					<select id="AddTAOfficeHours_TA" name="email">
+					<?php foreach($users as $user ) : if($user->getIsTA()) : ?>
+						<option value="<?php echo $user->getEmail(); ?>"><?php echo $user->getLastName() . ', ' . $user->getFirstName() . ' (' . $user->getEmail() . ')'; ?></option>
+					<?php endif; endforeach; ?>
+					</select>
+				</div>
+				<div class="input_block">
+					<label for="AddTAOfficeHours_Course">Course</label>
+					<select id="AddTAOfficeHours_Course" name="course" required>
+					<?php foreach($courses as $course) : ?>
+						<option value="<?php echo $course->getSubj() . '-' . $course->getCrse(); ?>"><?php echo $course->getSubj() . ' ' . $course->getCrse() . ' - ' . $course->getName(); ?></option>
+					<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="input_block">
+					<label for="AddTAOfficeHours_WeekDay">Day of the Week</label>
+					<select id="AddTAOfficeHours_WeekDay" name="week_day">
+						<option value="SUNDAY">SUNDAY</option>
+						<option value="MONDAY">MONDAY</option>
+						<option value="TUESDAY">TUESDAY</option>
+						<option value="WEDNESDAY">WEDNESDAY</option>
+						<option value="THURSDAY">THURSDAY</option>
+						<option value="FRIDAY">FRIDAY</option>
+						<option value="SATURDAY">SATURDAY</option>
+					</select>
+				</div>
+				<div class="input_block">
+					<label for="AddTAOfficeHours_StartTime">Start Time</label>
+					<input id="AddTAOfficeHours_StartTime" type="time" name="startTime" />
+				</div>
+				<div class="input_block">
+					<label for="AddTAOfficeHours_EndTime">End Time</label>
+					<input id="AddTAOfficeHours_EndTime" type="time" name="endTime" />
+				</div>
+				<input class="input_block" type="submit" value="Add TA Office Hours" />
+			</form>
+			<form id="DeleteTAOfficeHours" action="#" method="POST">
+				<h2>Remove a TA's Office Hours</h2>
+				<input type="hidden" name="form" value="DeleteTAOfficeHours" />
+				<div class="input_block">
+					<label for="DeleteTAOfficeHours_hours">Hours</label>
+					<select id="DeleteTAOfficeHours_hours" name="ta_hours">
+					<?php foreach( getAllTAOfficeHours() as $ta_hours ) : ?>
+						<option value="<?php echo $ta_hours['course']->getSubj() . ' ' . $ta_hours['course']->getCrse() . ' ' . $ta_hours['user']->getEmail() . ' ' . $ta_hours['week_day']; ?>"><?php echo $ta_hours['user']->getLastName() . ', ' . $ta_hours['user']->getFirstName() . ' (' . $ta_hours['user']->getEmail() . ') - ' . $ta_hours['course']->getSubj() . ' ' . $ta_hours['course']->getCrse() . ' : ' . $ta_hours['course']->getName() . ' - ' . $ta_hours['week_day'] . ' ' . $ta_hours['startTime'] . '-' . $ta_hours['endTime']; ?></option>
+					<?php endforeach; ?>
+					</select>
+					<input class="input_block" type="submit" value="Delete TA Office Hours" />
+				</div>
 			</form>
 		</section>
 		<aside>
