@@ -4,19 +4,18 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 require(SITE_ROOT . '/PHP/Course.php');
 require(SITE_ROOT . '/PHP/relations.php');
 
-$courses = COURSE::getAllCourses();
-$users = USER::getAllUsers();
+$courses = $_SESSION['user']->getTACourses();
 
 if( isset($_POST['form']) ) {
 	switch ($_POST['form']) {
 		case 'AddTAOfficeHours':
-/* 			try {
+			try {
 				list($subj, $crse) = split('-', $_POST['course']);
 				$_SESSION['user']->addTAOfficeHours($subj, intval($crse), $_POST['week_day'], $_POST['startTime'], $_POST['endTime']);
 			}
 			catch( Exception $e ) {
 			}
-			break; */
+			break;
 	}		
 }
 ?>
@@ -78,6 +77,7 @@ if( isset($_POST['form']) ) {
 					
 					<h3>Add Your Office Hours</h3>
 						<form id="AddCourse" action="#" method="POST">
+							<input type="hidden" name="form" value="AddTAOfficeHours" />
 							<div class="input_block">
 								<label for="AddTAOfficeHours_Course">Course</label>
 								<select id="AddTAOfficeHours_Course" name="course" required>
@@ -132,23 +132,15 @@ if( isset($_POST['form']) ) {
 								$start_time = $rows['start_time'];
 								$end_time = $rows['end_time'];
 							
-							echo "<table border=\"1\">
-							<tr>
-								<td><b>SUBJ</b></td>
-								<td><b>CRSE</b></td>
-								<td><b>Day</b></td>
-								<td><b>Start Time</b></td>
-								<td><b>End Time</b></td>
-							</tr>";
-							echo "
-							<tr>
-								<td>$subj</td>
-								<td>$crse</td>
-								<td>$week_day</td>
-								<td>$start_time</td>
-								<td>$end_time</td>
-							</tr>";
-							echo "</table>";
+							echo 
+							"
+								 $subj 
+								 $crse 
+								 $week_day 
+								 $start_time 
+								 $end_time<br>
+							";
+
 							endwhile;
 						?>
 					<br><br>
