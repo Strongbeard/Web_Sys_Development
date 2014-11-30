@@ -268,7 +268,7 @@ class User {
 		$hours = array();
 		if( $this->isTA && $this->inDB ) {
 			$db = DB::getInstance();
-			$hours_rows = $db->prep_execute('SELECT subj, crse, week_day, startTime, endTime WHERE email = :email;', array(
+			$hours_rows = $db->prep_execute('SELECT subj, crse, week_day, start_time, end_time FROM ta_hours WHERE email = :email;', array(
 				':email' => $this->email
 			));
 			
@@ -276,9 +276,9 @@ class User {
 				$hours[] = [
 					'course' => COURSE::fromDatabase( $row['subj'], intval($row['crse']) ),
 					'week_day' => $row['week_day'],
-					'startTime' => $row['startTime'],
-					'endTime' => $row['endTime']
-				]
+					'startTime' => $row['start_time'],
+					'endTime' => $row['end_time']
+				];
 			}
 		}
 		return $hours;
