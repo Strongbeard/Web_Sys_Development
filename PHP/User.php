@@ -296,6 +296,7 @@ class User {
 	}
 	
 	// Return an array with database TAs that are mapped to student's courses
+	// along with that TA's office hours for that course.
 	public function getStudentTAsOfficeHours() {
 		if( $this->isStudent && $this->inDB ) {
 			$db = DB::getInstance();
