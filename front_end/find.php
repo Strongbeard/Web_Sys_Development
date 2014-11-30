@@ -27,8 +27,10 @@ if (isset($_GET['ta_name']) && !empty($_GET['ta_name'])) {
 		if ($result != null && sizeof($result) > 0) {
 			$all = '';
 			foreach ($result as $row) {
-        		$all .= ('<tr><td>' . $row['firstName'] . '</td><td>' . $row['lastName'] . '</td><td>' . $row['email'] . '</td><td>' . $row['subj'] . '</td><td>' . $row['crse'] .  '</td><td>' . $row['name'] . '</td></tr>');
+				$chk_box_val = $row['subj'] . ' ' . $row['crse'];
+        		$all .= ('<tr><td>' . $row['firstName'] . '</td><td>' . $row['lastName'] . '</td><td>' . $row['email'] . '</td><td>' . $row['subj'] . '</td><td>' . $row['crse'] .  '</td><td>' . $row['name'] . '</td><td><input type="checkbox" value="' . $chk_box_val .  '"></td></tr>');
         	}
+        	$all.=('<tr><td></td><td></td><td></td><td></td><td></td><td></td><td><input type="submit" value="Add"></td></tr>');
         	echo $all;
 		}
 		else {
@@ -57,8 +59,10 @@ if (isset($_GET['class_name']) && !empty($_GET['class_name'])) {
 		if ($result != null && sizeof($result) > 0) {
 			$all = '';
 			foreach ($result as $row) {
-        		$all .= ('<tr><td>' . $row['subj'] . '</td><td>' . $row['crse'] . '</td><td>' . $row['name'] . '</td><td>' . $row['firstName'] . ' ' . $row['lastName'] .  '</td><td>' . $row['email'] . '</td></tr>');
+				$chk_box_val = $row['subj'] . ' ' . $row['crse'];
+        		$all .= ('<tr><td>' . $row['subj'] . '</td><td>' . $row['crse'] . '</td><td>' . $row['name'] . '</td><td>' . $row['firstName'] . ' ' . $row['lastName'] .  '</td><td>' . $row['email'] . '</td><td><input type="checkbox" value="' . $chk_box_val .  '"></td></tr>');
         	}
+        	$all.=('<tr><td></td><td></td><td></td><td></td><td></td><td><input type="submit" value="Add"></td></tr>');
         	echo $all;
 		}
 		else {
@@ -69,6 +73,27 @@ if (isset($_GET['class_name']) && !empty($_GET['class_name'])) {
 	catch (Exception $e) {
 		echo "Error: " . $e->getMessage();
 	}
+}
+
+if (isset($_GET['add']) && isset($_GET['checked_vals']) && !empty($_GET['checked_vals'])) {
+	$results = $_GET['checked_vals'];
+	try {
+		$user = User::fromDatabase($_SESSION['user']->getEmail());
+		foreach ($results as $val) {
+			$arr = explode(' ', $val); //[0] = subj, [1] = crse#
+			if ($user->addUserCourse('student', $arr[0], (int) $arr[1])) {
+				 //return true if added successfully
+				echo 1;
+			}
+			else {
+				echo 0;
+			}
+		}
+	}
+	catch(Exception $e) {
+		echo "Error: " . $e->getMessage();
+	}
+	
 }
 
 ?>

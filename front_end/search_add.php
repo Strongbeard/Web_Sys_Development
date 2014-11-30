@@ -85,7 +85,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 						</hgroup>
 					</figure>
 			</section>
-			<section id="results">
+			<form id="results">
 				<span></span>
 				<table>
 					<thead>
@@ -94,7 +94,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					<tbody>
 					</tbody>
 				</table>
-			</section>
+			</form>
 			<aside>
 				<!--<section class="popular-recipes">
 					<?php/*
@@ -120,6 +120,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				event.preventDefault();
 				$('#results > span').empty();
 				$('#results > table').empty();
+				//$('#results > div').empty();
 				var ta_name = $('#search_ta').val();
 
 				$('input').removeClass('error');
@@ -138,8 +139,9 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                   	//console.log("data: " + data.length);
 		                   	//console.log(data);
 		                   	if (data.length > 0) {
-		                   		$('#results > table').append("<thead><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Subject</th><th>Course</th><th>Name</th></tr></thead>");
+		                   		$('#results > table').append("<thead><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Subject</th><th>Course</th><th>Name</th><th>Add?</th></tr></thead>");
 		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
+		                   		//$('#results > div').append("<input type='submit' value='Add'>");
 		                   	}
 		                   	else {
 		                   		$('#results > span').html("No results");
@@ -160,6 +162,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 				event.preventDefault();
 				$('#results > span').empty();
 				$('#results > table').empty();
+				//$('#results > div').empty();
 				var class_name = $('#search_class').val();
 				var school_name = $("#search_school option:selected" ).val();
 				//console.log(school_name);
@@ -201,11 +204,12 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                method: 'GET',
 		                success: function (data) {
 		                    data = $.trim(data);
-		                   	console.log("data: " + data.length);
-		                   	console.log(data);
+		                   	//console.log("data: " + data.length);
+		                   	//console.log(data);
 		                   	if (data.length > 0) {
-		                   		$('#results > table').append("<thead><tr><th>Subject</th><th>Course #</th><th>Name</th><th>TA Name</th><th>TA Email</th></tr></thead>");
+		                   		$('#results > table').append("<thead><tr><th>Subject</th><th>Course #</th><th>Name</th><th>TA Name</th><th>TA Email</th><th>Add?</th></tr></thead>");
 		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
+		                   		//$('#results > div').append("<input type='submit' value='Add'>");
 		                   	}
 		                   	else {
 		                   		$('#results > span').html("No results");
@@ -220,6 +224,43 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		            });
 				}
 			
+			});
+
+			$('#results').submit(function (event) {
+				event.preventDefault();
+				var action = $('#results option:selected', this).val();
+				var checked_vals = [];
+    			$('table input:checkbox:checked').each(function() {
+    				var id = $(this).val();
+    				//console.log(id);
+    				checked_vals.push($(this).val());
+    			});
+    			if (checked_vals.length > 0) {
+    				$.ajax({
+		                url: "./find.php",
+		                data: {'add' : 1, 'checked_vals': checked_vals },
+		                method: 'GET',
+		                success: function (data) {
+		                    data = $.trim(data);
+		                   	//console.log("data: " + data.length);
+		                   //console.log("data " + data);
+		                   	if (data === "1") {
+		                   		$('#results > span').html("Added successfully");
+		                   	}
+		                   	if (data === "0") {
+		                   		$('#results > span').html("Course already added to student");
+		               
+		                   	}
+		                },
+		                error: function () {
+		                    console.log("error");
+		                }
+		            });
+    			}
+    			else {
+    				//no results checked/
+    			}
+    			
 			});
 		</script>
 </body></html>
