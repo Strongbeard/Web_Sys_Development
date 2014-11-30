@@ -246,7 +246,7 @@ class User {
 		return $courses;
 	}
 	
-	// Return an array with database course rows that the student is enrolled in
+	// Return an array with the course objects that the ta is teaching
 	public function getTACourses() {
 		require_once(SITE_ROOT . '\PHP\Course.php');
 		$courses = array();
@@ -261,6 +261,27 @@ class User {
 			}
 		}
 		return $courses;
+	}
+	
+	public function getTAOfficeHours() {
+		require_once( SITE_ROOT . '\php\Course.php');
+		$hours = array();
+		if( $this->isTA && $this->inDB ) {
+			$db = DB::getInstance();
+			$hours_rows = $db->prep_execute('SELECT subj, crse, week_day, startTime, endTime WHERE email = :email;', array(
+				':email' => $this->email
+			));
+			
+			foreach( $hours_rows as $row ) {
+				$hours[] = [
+					'course' => COURSE::fromDatabase( $row['subj'], intval($row['crse']) ),
+					'week_day' => $row['week_day'],
+					'startTime' => $row['startTime'],
+					'endTime' => $row['endTime']
+				]
+			}
+		}
+		return $hours;
 	}
 	
 	// Return an array with database TAs that are mapped to student's courses
