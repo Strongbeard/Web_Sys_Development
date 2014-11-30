@@ -196,6 +196,7 @@ if( isset($_POST['form']) ) {
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>TA Scheduler</title>
+	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front+end/resources/better-timeinput-polyfill.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/user.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/admin.css">
 	<div class="upperright"> 
@@ -432,5 +433,10 @@ if( isset($_POST['form']) ) {
 			© 2014 TA Hunters
 		</footer>
 	</div><!-- .wrapper -->
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="<?php SITE_URL ?>/front_end/resources/webshim/polyfiller.js"></script>
+	<script type="text/javascript">
+		webshim.polyfill('forms-ext');
+	</script>
 </body>
 </html>
