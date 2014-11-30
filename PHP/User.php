@@ -295,6 +295,17 @@ class User {
 		return false;
 	}
 	
+	// Return an array with database TAs that are mapped to student's courses
+	public function getStudentTAsOfficeHours() {
+		if( $this->isStudent && $this->inDB ) {
+			$db = DB::getInstance();
+			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time FROM users as u1 INNER JOIN students_courses AS sc ON u1.email = sc.email INNER JOIN tas_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email LEFT OUTER JOIN ta_hours as h ON u2.email = h.email AND tc.subj = h.subj AND tc.crse = h.crse WHERE u1.email = :email', array(
+				':email' => $this->email
+			));
+		}
+		return false;
+	}
+	
 	
 	// ########################## MODIFIER FUNCTIONS ###########################
 	
