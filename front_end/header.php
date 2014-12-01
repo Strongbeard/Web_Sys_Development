@@ -29,10 +29,10 @@ if( !isset($_SESSION) ) {
 			<?php if( $_SESSION['user']->getIsTA() ) : ?>
 						<li><a href="TA.php" <?php if( curPageName() === 'TA.php' ) : ?> class="current" <?php endif; ?>>TA</a></li>
 			<?php endif; ?>
-			<?php if( $_SESSION['user']->getIsStudent() ) : ?>
-						<li><a href="search_add.php" <?php if( curPageName() === 'search_add.php' ) : ?> class="current" <?php endif; ?>>Search/Add TA</a></li>
-			<?php endif; ?>
-						<li><a href="_profile.php" <?php if( curPageName() === '_profile.php' ) : ?> class="current" <?php endif; ?>>Profile</a></li>
+
+			<li><a href="search_add.php" <?php if( curPageName() === 'search_add.php' ) : ?> class="current" <?php endif; ?>>Search/Add TA</a></li>
+
+
 
 		</ul>
 	</nav>

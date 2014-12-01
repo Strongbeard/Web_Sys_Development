@@ -40,43 +40,14 @@ if( isset($_POST['form']) ) {
 	</head>
 	<body>
 		<div class="wrapper">
-			<header>
-				<div class="upperright"> 
-					<?php	$firstname = $_SESSION['user']->getFirstName();
+			<?php	$firstname = $_SESSION['user']->getFirstName();
 						$lastname = $_SESSION['user']->getLastName();
-						echo "Welcome " . $firstname . " " . $lastname . " ";	
-					?> 
-					<a href="logout.php">Logout</a>
-				</div>
-				<h1><a href=""><img src="./resources/johnny'sapple.png" height="38px" width="38px"> TA Scheduler</a></h1>
-				<nav>
-					<ul>
-						<?php
-						$t = $_SESSION['user']->getIsAdmin();
-
-						if ($t == true) {
-								echo "<li><a href='Admin.php'>Admin</a><li>";
-						}
-						?>
-						<?php
-						$t = $_SESSION['user']->getIsTA();
-
-						if ($t == true) {
-								echo "<li><a href='student.php'>Student</a><li>";
-						}
-						?>
-						<?php
-						$t = $_SESSION['user']->getIsTA();
-
-						if ($t == true) {
-								echo "<li><a href='TA.php' class='current'> TA</a><li>";
-						}
-						?>
-						<li><a href="search_add.php">Search/Add</a></li>
-						<li><a href="_profile.php">Profile</a></li>
-					</ul>
-				</nav>
-			</header>
+						echo "<div id= 'namesize' align='right'> Welcome " . $firstname . " " . $lastname . " </div>";	
+					?>
+		<div id="upperright"> 
+			<a href="logout.php">Logout</a>
+		</div>
+		<?php include(SITE_ROOT . '/front_end/header.php') ?>
 			<section class="courses">
 				
 					<figure>
