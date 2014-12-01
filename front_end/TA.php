@@ -124,9 +124,9 @@ if( isset($_POST['form']) ) {
 					</form>
 					
 					</figure>
-				
-				
 			</section>
+			<?php include(SITE_ROOT . '/front_end/sidebar.php'); ?>
+
 			<footer>
 				© 2014 TA Hunters
 			</footer>
