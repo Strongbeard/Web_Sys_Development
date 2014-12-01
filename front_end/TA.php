@@ -5,6 +5,7 @@ require(SITE_ROOT . '/PHP/Course.php');
 require(SITE_ROOT . '/PHP/relations.php');
 
 $courses = $_SESSION['user']->getTACourses();
+$TAhours = $_SESSION['user']->getTAOfficeHours();
 
 if( isset($_POST['form']) ) {
 	switch ($_POST['form']) {
@@ -12,6 +13,15 @@ if( isset($_POST['form']) ) {
 			try {
 				list($subj, $crse) = split('-', $_POST['course']);
 				$_SESSION['user']->addTAOfficeHours($subj, intval($crse), $_POST['week_day'], $_POST['startTime'], $_POST['endTime']);
+			}
+			catch( Exception $e ) {
+			}
+			break;
+			
+		case 'DeleteTAOfficeHours':
+			list( $subj, $crse, $week_day ) = split( ' ', $_POST['ta_hours'] );
+			try {
+				$_SESSION['user']->removeTAOfficeHours( $subj, intval($crse), $week_day );
 			}
 			catch( Exception $e ) {
 			}
@@ -116,11 +126,7 @@ if( isset($_POST['form']) ) {
 						$TAemail = $_SESSION['user']->getEmail();
 						//connect to server
 						$connect = mysql_connect("localhost","root","");
-						
-						//connect to database
 						mysql_select_db("ta_hunter");
-						
-						//query the database
 						$query = mysql_query("SELECT * FROM ta_hours WHERE email = '$TAemail' ");
 						
 						//fetch the results/convert results into an array
@@ -133,17 +139,25 @@ if( isset($_POST['form']) ) {
 								$end_time = $rows['end_time'];
 							
 							echo 
-							"
-								 $subj 
-								 $crse 
-								 $week_day 
-								 $start_time 
-								 $end_time<br>
-							";
-
+							"Subj: $subj / Crse: $crse / Day: $week_day <br>
+							Start: $start_time <br>	End: $end_time <br><hr>";
 							endwhile;
 						?>
 					<br><br>
+					<h3>Delete Your Office Hours</h3>
+					<form id="DeleteTAOfficeHours" action="#" method="POST">
+						<input type="hidden" name="form" value="DeleteTAOfficeHours" />
+						<div class="input_block">
+							<label for="DeleteTAOfficeHours_hours">Hours</label>
+							<select id="DeleteTAOfficeHours_hours" name="ta_hours">
+								<?php foreach( $TAhours as $ta_hours ) : ?>
+								<option value="<?php echo $ta_hours['course']->getSubj() . ' ' . $ta_hours['course']->getCrse() . ' ' . $ta_hours['week_day']; ?>"><?php echo $ta_hours['course']->getSubj() . ' ' . $ta_hours['course']->getCrse() . ' : ' . $ta_hours['course']->getName() . ' - ' . $ta_hours['week_day'] . ' ' . $ta_hours['startTime'] . '-' . $ta_hours['endTime']; ?></option>
+								<?php endforeach; ?>
+							</select>
+							<input class="input_block" type="submit" value="Delete TA Office Hours" />
+						</div>
+					</form>
+					
 					</figure>
 				
 				
