@@ -45,17 +45,12 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 						<img id="url_user" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/mailicon.png" alt="">
 					</label>
 					<label>
-						Password: <a href="forgot_password.html" id="forgotPassword">Forgot Password?</a>
+						<p>Password: <a href="forgot_password.html" id="forgotPassword"></a></p>
 						<input type="password" name="password" class="url" id="pass" placeholder="Password">
 						<img id="url_password" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/passicon.png" alt="">
 
 					</label>
-					<!--just to have two options for the login button-->
-					<!--<a href="#" id="loginBtn">Login</a> -->
-					
-					<!--this needs help with the link whenever I change the type to image it will not let me reference
-					to another page but if I change the type to link, it will let me reference to another page-->
-					<!--<a href="http://www.google.com"><input type="image" src="./images/submit_hover.png" ></a>-->
+
 
 					<div id="submit">
 						<input type="image" src="<?php echo SITE_URL; ?>/front_end/loginpage/images/submit_hover.png" id="submit1" value="Sign In">
