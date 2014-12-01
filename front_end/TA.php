@@ -34,6 +34,7 @@ if( isset($_POST['form']) ) {
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>TA Scheduler</title>
 		<link rel="stylesheet" type="text/css" href="./resources/user.css">
+		<link rel="stylesheet" type="text/css" href="./resources/table.css">
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
