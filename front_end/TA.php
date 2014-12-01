@@ -93,11 +93,20 @@ if( isset($_POST['form']) ) {
 					
 					<br><br>
 					<h3>View Your Office Hours</h3>
-						<?PHP
-						foreach( $_SESSION['user']->getTAOfficeHours() as $hours ) {
-							echo 'Subj: ' . $hours['course']->getSubj() .  ' / Crse: ' . $hours['course']->getCrse() . ' / Day: ' . $hours['week_day'] . '<br>Start: ' . $hours['startTime'] . ' <br>	End: ' . $hours['endTime'] .' <br><hr>';
-						}?>
-					<br><br>
+					
+					 <table class="imagetable" width="560">
+					  <tr>
+							<th>SUBJ</th><th>CRSE</th><th>DAY</th><th>Start</th><th>End</th>
+						</tr>
+						<?php
+							//u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time
+							foreach( $_SESSION['user']->getTAOfficeHours() as $hours ) {
+								echo "<tr><td>" . $hours['course']->getSubj() . "</td><td>" . $hours['course']->getCrse() . "</td><td>" . $hours['week_day'] . "</td><td>" . $hours['startTime'] . "</td><td>" . $hours['endTime'] . "</td></tr>";
+							}	
+						?>
+						</table>
+						<br><br>
+					
 					<h3>Delete Your Office Hours</h3>
 					<form id="DeleteTAOfficeHours" action="#" method="POST">
 						<input type="hidden" name="form" value="DeleteTAOfficeHours" />
@@ -108,6 +117,7 @@ if( isset($_POST['form']) ) {
 								<option value="<?php echo $ta_hours['course']->getSubj() . ' ' . $ta_hours['course']->getCrse() . ' ' . $ta_hours['week_day']; ?>"><?php echo $ta_hours['course']->getSubj() . ' ' . $ta_hours['course']->getCrse() . ' : ' . $ta_hours['course']->getName() . ' - ' . $ta_hours['week_day'] . ' ' . $ta_hours['startTime'] . '-' . $ta_hours['endTime']; ?></option>
 								<?php endforeach; ?>
 							</select>
+							<br><br>
 							<input class="input_block" type="submit" value="Delete TA Office Hours" />
 						</div>
 					</form>
