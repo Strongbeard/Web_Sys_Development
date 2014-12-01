@@ -37,9 +37,8 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 							<th>Course Name</th><th>Hours</th><th>TA Name</th><th>E-mail</th>
 						</tr>
 						<?php
-							$var = $_SESSION['user']->getStudentTAsOfficeHours();
-							//u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time 
-							foreach( $var as $ta_row ) {
+							//u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time
+							foreach( $_SESSION['user']->getStudentTAsOfficeHours() as $ta_row ) {
 								$course = COURSE::fromDatabase($ta_row['subj'], intval($ta_row['crse']));
 								echo "<tr><td>" . $course->getName() . "</td><td>" . $ta_row['week_day']." ". substr($ta_row['start_time'],0,-3) . " - " . substr($ta_row['end_time'],0,-3) . "</td><td>"  . $ta_row['firstName'] . " " . $ta_row['lastName'] . "</td><td>" . $ta_row['email'] . "</td><tr>";
 							}	
