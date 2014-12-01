@@ -94,26 +94,9 @@ if( isset($_POST['form']) ) {
 					<br><br>
 					<h3>View Your Office Hours</h3>
 						<?PHP
-						$TAemail = $_SESSION['user']->getEmail();
-						//connect to server
-						$connect = mysql_connect("localhost","root","");
-						mysql_select_db("ta_hunter");
-						$query = mysql_query("SELECT * FROM ta_hours WHERE email = '$TAemail' ");
-						
-						//fetch the results/convert results into an array
-							WHILE($rows = mysql_fetch_array($query)):
-								$email = $rows['email'];
-								$subj = $rows['subj'];
-								$crse = $rows['crse'];
-								$week_day = $rows['week_day'];
-								$start_time = $rows['start_time'];
-								$end_time = $rows['end_time'];
-							
-							echo 
-							"Subj: $subj / Crse: $crse / Day: $week_day <br>
-							Start: $start_time <br>	End: $end_time <br><hr>";
-							endwhile;
-						?>
+						foreach( $_SESSION['user']->getTAOfficeHours() as $hours ) {
+							echo 'Subj: ' . $hours['course']->getSubj() .  ' / Crse: ' . $hours['course']->getCrse() . ' / Day: ' . $hours['week_day'] . '<br>Start: ' . $hours['startTime'] . ' <br>	End: ' . $hours['endTime'] .' <br><hr>';
+						}?>
 					<br><br>
 					<h3>Delete Your Office Hours</h3>
 					<form id="DeleteTAOfficeHours" action="#" method="POST">
