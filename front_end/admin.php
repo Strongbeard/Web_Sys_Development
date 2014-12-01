@@ -417,19 +417,7 @@ if( isset($_POST['form']) ) {
 				</div>
 			</form>
 		</section>
-		<aside>
-			<section class="popular-recipes">
-				<?php
-					$t = $_SESSION['user']->getIsStudent();
 
-					if ($t == true) {
-							echo "<h2>Are You a Student?</h2>";
-							echo "<input type='text' name='firstname' placeholder='Enter your code'>";
-						echo "<input type='submit' value='Submit'>";
-					}
-				?>
-			</section>
-		</aside>
 		<footer>
 			© 2014 TA Hunters
 		</footer>
