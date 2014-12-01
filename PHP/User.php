@@ -372,7 +372,7 @@ class User {
 					));
 					
 					if( !empty($result) ) {
-						return $this->setTA(true, true);
+						return $this->setIsTA(true, true);
 					}
 				}
 			}

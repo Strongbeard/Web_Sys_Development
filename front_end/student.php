@@ -34,44 +34,22 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 					?>
 					 <table class="imagetable" width="560">
 					  <tr>
-							<th>Course Name</th><th>Hours</th><th>TA Name</th>
+							<th>Course Name</th><th>Hours</th><th>TA Name</th><th>E-mail</th>
 						</tr>
 						<?php
-							$var = $_SESSION['user']->getStudentTAs();
-							//subj, crse 
+							$var = $_SESSION['user']->getStudentTAsOfficeHours();
+							//u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time 
 							foreach( $var as $ta_row ) {
 								$course = COURSE::fromDatabase($ta_row['subj'], intval($ta_row['crse']));
-								echo "<tr><td>" . $course->getName() . "</td><td> HOUR NEEDs TO BE FIXED </td><td>"  . $ta_row['firstName'] . " " . $ta_row['lastName'] . "</td><tr>";
+								echo "<tr><td>" . $course->getName() . "</td><td>" . $ta_row['week_day']." ". substr($ta_row['start_time'],0,-3) . " - " . substr($ta_row['end_time'],0,-3) . "</td><td>"  . $ta_row['firstName'] . " " . $ta_row['lastName'] . "</td><td>" . $ta_row['email'] . "</td><tr>";
 							}	
 						?>
 						</table>
+						
 				</figure>	
 			</section>
-			
-			<aside>
-				<!--checks if you are a student and asks you if you ha a TA_CODE-->
-				<section>
-					<?php
-						$t = $_SESSION['user']->getIsTA();
-						$s = $_SESSION['user']->getIsStudent();
-						if ($t == false && $s == true ) {
-								echo "<h2>Are You a TA?</h2>";
-								echo "<input type='text' name='firstname' placeholder='Enter your ta_code'>";
-						    echo "<input type='submit' value='Submit'>";
-						}
-						else if ($t == true && $s == true ) {
-								echo "<h2>Are You a TA for another class?</h2>";
-								echo "<input type='text' name='firstname' placeholder='Enter your ta_code'>";
-						    echo "<input type='submit' value='Submit'>";
-						}
-					?>
-				</section>
-				<!--link to ALAC website-->
-				<section >
-					<h2>ALAC Hours</h2>
-					<a href="http://alac.rpi.edu/update.do?artcenterkey=4">alac.rpi.edu</a>
-				</section>
-			</aside>
+			<!--checks if you are a student and asks you if you have a TA_CODE-->
+			<?php include(SITE_ROOT . '/front_end/sidebar.php'); ?>
 			
 			<footer>
 				© 2014 TA Hunters
