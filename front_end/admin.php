@@ -247,7 +247,7 @@ if( isset($_POST['form']) ) {
 				</div>
 				<div class="input_inline">
 					<input id="AddUser_TA" type="checkbox" name="ta" />
-					<label for="AddUser_TA">TA<label>
+					<label for="AddUser_TA">TA</label>
 				</div>
 				<div class="input_inline">
 					<input id="AddUser_Tutor" type="checkbox" name="tutor" />
